@@ -1,5 +1,7 @@
 # paper-swipe
 
+See the [component page](http://motss.github.io/paper-swipe/components/paper-swipe/) for more information.
+
 `paper-swipe` provides enables swipe gestures to swipe content to either the left or the right to unveil the underlay
 behind it.
 
