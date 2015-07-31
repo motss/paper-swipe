@@ -1,0 +1,148 @@
+<!doctype html>
+<!--
+@license
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+    <title>paper-swipe Demo</title>
+    <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+    <link rel="import" href="../paper-swipe.html">
+    <link rel="import" href="../../paper-styles/color.html">
+    <link rel="import" href="../../paper-styles/demo-pages.html">
+    <link rel="import" href="../../paper-ripple/paper-ripple.html">
+
+    <style is="custom-style">
+      body {
+        overflow-x: hidden;
+      }
+
+      div[content]{
+        padding: 16px;
+        height: 50px;
+        background: #e0e0e0;
+      }
+
+      div[underlay]{
+        padding: 16px;
+        height: 50px;
+        background: #009688;
+      }
+
+      paper-swipe {
+        padding: 16px 0 16px 0;
+      }
+
+      h4 {
+        margin-bottom: 0;
+      }
+
+      .label {
+        text-transform: uppercase;
+        font-weight: bold;
+      }
+    </style>
+  </head>
+  <body unresolved>
+    <template is="dom-bind" id="swipe">
+      <div>
+        <h4>Disabled Swipe</h4>
+        <paper-swipe id="disabled" disable-swipe>
+          <div id="content" content>
+            <div class="label">Swipe disabled</div>
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aut, harum?
+          </div>
+        </paper-swipe>
+      </div>
+
+      <div>
+        <h4>Left Swipe only</h4>
+        <paper-swipe id="left" swipe-left>
+          <div underlay>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sapiente, sit?</div>
+          <div content>
+            <div class="label">Only Swipe Left is allowed</div>
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aut, sunt!
+          </div>
+        </paper-swipe>
+      </div>
+
+      <div>
+        <h4>Right Swipe only</h4>
+        <paper-swipe id="right" swipe-right>
+          <div underlay>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Et quae quam repudiandae suscipit veritatis? Fuga officia reprehenderit tempore totam voluptates?</div>
+          <div content>
+            <div class="label">Only Swipe Right is allowed</div>
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aut, sunt!
+          </div>
+        </paper-swipe>
+      </div>
+
+      <div>
+        <h4>Either side swiping</h4>
+        <paper-swipe id="either">
+          <div underlay>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Et quae quam repudiandae suscipit veritatis? Fuga officia reprehenderit tempore totam voluptates?</div>
+          <div content>
+            <div class="label">Swipe to any side</div>
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aut, sunt!
+          </div>
+        </paper-swipe>
+      </div>
+
+      <div>
+        <h4>With Tap Handler</h4>
+        <paper-swipe id="tap" swipe-left on-tap-underlay="tapAction" on-edge="edgeAction">
+          <div underlay>
+            <paper-ripple></paper-ripple>
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Et quae quam repudiandae suscipit veritatis? Fuga officia reprehenderit tempore totam voluptates?
+          </div>
+          <div content>
+            <paper-ripple></paper-ripple>
+            <div class="label">Fire 'tap-underlay' event</div>
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aut, sunt!
+          </div>
+        </paper-swipe>
+      </div>
+
+      <div>
+        <h4>Fire event when content has been dragged to the edge!</h4>
+        <paper-swipe id="tap" swipe-left on-edge="edgeAction">
+          <div underlay>
+            <paper-ripple></paper-ripple>
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Et quae quam repudiandae suscipit veritatis? Fuga officia reprehenderit tempore totam voluptates?
+          </div>
+          <div content>
+            <paper-ripple></paper-ripple>
+            <div class="label">Fire 'edge' event</div>
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aut, sunt!
+          </div>
+        </paper-swipe>
+      </div>
+    </template>
+
+    <script>
+      swipe.tapAction = function(e) {
+        var target = e.detail.target.target,
+            parentElem;
+        if (target.localName === 'paper-ripple'){
+          parentElem = target.parentElement;
+          if (parentElem.attributes[0].name === 'content'){
+            console.log('Content is clicked');
+          }else {
+            console.log('Underlay is clicked!');
+          }
+        }
+      };
+
+      swipe.edgeAction = function (e) {
+        console.log('Edge!');
+      }
+    </script>
+  </body>
+</html>
