@@ -26,22 +26,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       div[content]{
         padding: 16px;
-        height: 50px;
         background: #e0e0e0;
       }
 
       div[underlay]{
-        padding: 16px;
-        height: 50px;
+        padding: 24px;
         background: #009688;
-      }
-
-      paper-swipe {
-        padding: 16px 0 16px 0;
       }
 
       h4 {
         margin-bottom: 0;
+        text-transform: capitalize;
       }
 
       .label {
@@ -53,74 +48,95 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <body unresolved>
     <template is="dom-bind" id="swipe">
       <div>
-        <h4>Disabled Swipe</h4>
+        <h4>disabled swipe</h4>
         <paper-swipe id="disabled" disable-swipe>
           <div id="content" content>
             <div class="label">Swipe disabled</div>
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aut, harum?
+            <div>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Assumenda, praesentium.</div>
           </div>
         </paper-swipe>
       </div>
 
       <div>
-        <h4>Left Swipe only</h4>
+        <h4>left swipe only</h4>
         <paper-swipe id="left" swipe-left>
-          <div underlay>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sapiente, sit?</div>
+          <div underlay>
+            <div>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Maiores, voluptas.</div>
+          </div>
           <div content>
             <div class="label">Only Swipe Left is allowed</div>
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aut, sunt!
+            <div>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolore, eaque.</div>
           </div>
         </paper-swipe>
       </div>
 
       <div>
-        <h4>Right Swipe only</h4>
+        <h4>right swipe only</h4>
         <paper-swipe id="right" swipe-right>
-          <div underlay>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Et quae quam repudiandae suscipit veritatis? Fuga officia reprehenderit tempore totam voluptates?</div>
+          <div underlay>
+            <div>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Natus, repellendus?</div>
+          </div>
           <div content>
             <div class="label">Only Swipe Right is allowed</div>
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aut, sunt!
+            <div>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Adipisci, dolore?</div>
           </div>
         </paper-swipe>
       </div>
 
       <div>
-        <h4>Either side swiping</h4>
+        <h4>either side swiping</h4>
         <paper-swipe id="either">
-          <div underlay>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Et quae quam repudiandae suscipit veritatis? Fuga officia reprehenderit tempore totam voluptates?</div>
+          <div underlay>
+            <div>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Iure, temporibus.</div>
+          </div>
           <div content>
             <div class="label">Swipe to any side</div>
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aut, sunt!
+            <div>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ullam, vel.</div>
           </div>
         </paper-swipe>
       </div>
 
       <div>
-        <h4>With Tap Handler</h4>
+        <h4>with tap handler</h4>
         <paper-swipe id="tap" swipe-left on-tap-underlay="tapAction" on-edge="edgeAction">
           <div underlay>
             <paper-ripple></paper-ripple>
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Et quae quam repudiandae suscipit veritatis? Fuga officia reprehenderit tempore totam voluptates?
+            <div>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eaque, quae!</div>
           </div>
           <div content>
             <paper-ripple></paper-ripple>
             <div class="label">Fire 'tap-underlay' event</div>
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aut, sunt!
+            <div>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aut, sunt!</div>
           </div>
         </paper-swipe>
       </div>
 
       <div>
-        <h4>Fire event when content has been dragged to the edge!</h4>
+        <h4>fire event when content has been dragged to the edge!</h4>
         <paper-swipe id="tap" swipe-left on-edge="edgeAction">
           <div underlay>
             <paper-ripple></paper-ripple>
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Et quae quam repudiandae suscipit veritatis? Fuga officia reprehenderit tempore totam voluptates?
+            <div>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ea, ipsa!</div>
           </div>
           <div content>
             <paper-ripple></paper-ripple>
             <div class="label">Fire 'edge' event</div>
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aut, sunt!
+            <div>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aut, sunt!</div>
+          </div>
+        </paper-swipe>
+      </div>
+
+      <div>
+        <h4>reset swiping position!</h4>
+        <paper-swipe id="tap" reset-swipe peek-offset="-24" on-edge="disableAction">
+          <div underlay on-click="resetAction">
+            <paper-ripple></paper-ripple>
+            <div>Click to reset the position of the panel!</div>
+          </div>
+          <div content>
+            <paper-ripple></paper-ripple>
+            <div class="label">Reset Swipe Position</div>
+            <div>Swipe Left to remove the panel.</div>
           </div>
         </paper-swipe>
       </div>
@@ -142,7 +158,24 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       swipe.edgeAction = function (e) {
         console.log('Edge!');
-      }
+      };
+
+      swipe.disableAction = function (e) {
+        var target = e.target;
+        while (target.localName !== 'paper-swipe'){
+          target = target.parentElement;
+        }
+        target.setAttribute('disable-swipe', true);
+      };
+
+      swipe.resetAction = function (e) {
+        var target = e.target;
+        while (target.localName !== 'paper-swipe'){
+          target = target.parentElement;
+        }
+        target.removeAttribute('disable-swipe');
+        target.children.content.style.transform = 'translate3d(0px, 0px, 0px)';
+      };
     </script>
   </body>
 </html>

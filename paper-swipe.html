@@ -230,7 +230,17 @@ Example:
          * If true, the draggable panel has been dragged.
          * It is used to ensure that the panel is dragging.
          */
-        doesItEvenTrack: {
+        tracking: {
+          type: Boolean,
+          value: false,
+          notify: true
+        },
+
+        /**
+         * If true, the draggable panel will return to its origin.
+         * It is used when it is a single-use draggable panel.
+         */
+        resetSwipe: {
           type: Boolean,
           value: false,
           notify: true
@@ -342,6 +352,10 @@ Example:
           if (this.dragging) {
             this.width = this.$.content.offsetWidth;
             this.transition = false;
+            if (this.resetSwipe){
+              this.AtEdge = false;
+              this.curPos = 0;
+            }
           }
         }
       },
@@ -352,7 +366,7 @@ Example:
             dragDx;
           this.transitionDelta = dx;
           dragDx = this.AtEdge? this.curPos + dx: dx;
-          this.doesItEvenTrack = true;
+          this.tracking = true;
           this._moveDrawer(dragDx);
         }
       },
@@ -389,7 +403,7 @@ Example:
         /**
          * tracking must be asserted.
          */
-        if (this._swipeAllowed() && this.doesItEvenTrack){
+        if (this._swipeAllowed() && this.tracking){
           /**
            *  to swipe to the leftmost edge:-
            *  - slide until [this.peekOffset] - [this.width].
@@ -416,7 +430,7 @@ Example:
             this.fire('edge', {message: 'onEdge!', target: event});
           }
           this.validDelta = false;
-          this.doesItEvenTrack = false;
+          this.tracking = false;
           this._moveDrawer(deltaLR);
           // release the panel
           sharedPanel = null;
