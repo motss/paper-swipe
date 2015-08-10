@@ -41,7 +41,7 @@ Example:
       <div content>Fire `tap-underlay` event when the panel is being clicked...</div>
     </paper-swipe>
 
-`reset-swipe' attribute has been added as new feature to tell the user that the swiping panel has to return to its
+`reset-swipe` attribute has been added as new feature to tell the user that the swiping panel has to return to its
 origin and it is usually used with `on-edge` event handler to perform the additional task:
 
 Example:
