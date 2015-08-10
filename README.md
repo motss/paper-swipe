@@ -7,6 +7,7 @@ behind it.
 
 Example:
 
+    <paper-swipe>By default, it can be swiped to the left or to the right.</paper-swipe>
     <paper-swipe disable-swipe>Swipe Gestures disabled</paper-swipe>
     <paper-swipe reset-swipe>Reset panel position</paper-swipe>
     <paper-swipe left-swipe>Only Left Swipe</paper-swipe>
@@ -69,13 +70,13 @@ Example:
 <th>swipeLeft</th>
 <td>boolean</td>
 <td>false</td>
-<td>If true, only swiping to the left.</td>
+<td>If true, only swiping to the left. Either side swiping is the default.</td>
 </tr>
 <tr>
 <th>swipeRight</th>
 <td>boolean</td>
 <td>false</td>
-<td>If true, only swiping to the right.</td>
+<td>If true, only swiping to the right. Either side swiping is the default.</td>
 </tr>
 <tr>
 <th>disableSwipe</th>

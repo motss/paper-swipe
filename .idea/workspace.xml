@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="1141acc4-e750-45d5-adf7-85fc42f34110" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/README.md" afterPath="$PROJECT_DIR$/README.md" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/paper-swipe.html" afterPath="$PROJECT_DIR$/paper-swipe.html" />
     </list>
     <ignored path="paper-swipe.iws" />
@@ -23,30 +24,20 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="paper-swipe.html" pinned="false" current-in-tab="true">
+      <file leaf-file-name="paper-swipe.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/paper-swipe.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.67607975">
-              <caret line="64" column="104" selection-start-line="64" selection-start-column="104" selection-end-line="64" selection-end-column="104" />
+            <state vertical-scroll-proportion="-4.8">
+              <caret line="16" column="69" selection-start-line="16" selection-start-column="69" selection-end-line="16" selection-end-column="69" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="paper-button.html" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/bower_components/paper-button/paper-button.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-19.375">
-              <caret line="64" column="0" selection-start-line="64" selection-start-column="0" selection-end-line="68" selection-end-column="71" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="index.html" pinned="false" current-in-tab="false">
+      <file leaf-file-name="index.html" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/demo/index.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-41.4">
+            <state vertical-scroll-proportion="3.4385383">
               <caret line="138" column="36" selection-start-line="138" selection-start-column="36" selection-end-line="138" selection-end-column="36" />
               <folding />
             </state>
@@ -56,8 +47,8 @@
       <file leaf-file-name="README.md" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/README.md">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-9.230769">
-              <caret line="43" column="0" selection-start-line="43" selection-start-column="0" selection-end-line="51" selection-end-column="18" />
+            <state vertical-scroll-proportion="-5.1923075">
+              <caret line="9" column="64" selection-start-line="9" selection-start-column="64" selection-end-line="9" selection-end-column="64" />
               <folding />
             </state>
           </provider>
@@ -72,8 +63,8 @@
     <option name="CHANGED_PATHS">
       <list>
         <option value="$PROJECT_DIR$/demo/index.html" />
-        <option value="$PROJECT_DIR$/README.md" />
         <option value="$PROJECT_DIR$/paper-swipe.html" />
+        <option value="$PROJECT_DIR$/README.md" />
       </list>
     </option>
   </component>
@@ -283,34 +274,34 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/README.md">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-9.230769">
-          <caret line="43" column="0" selection-start-line="43" selection-start-column="0" selection-end-line="51" selection-end-column="18" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/demo/index.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-41.4">
-          <caret line="138" column="36" selection-start-line="138" selection-start-column="36" selection-end-line="138" selection-end-column="36" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/bower_components/paper-button/paper-button.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-19.375">
+        <state vertical-scroll-proportion="0.74044585">
           <caret line="64" column="0" selection-start-line="64" selection-start-column="0" selection-end-line="68" selection-end-column="71" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/README.md">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-5.1923075">
+          <caret line="9" column="64" selection-start-line="9" selection-start-column="64" selection-end-line="9" selection-end-column="64" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/paper-swipe.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.67607975">
-          <caret line="64" column="104" selection-start-line="64" selection-start-column="104" selection-end-line="64" selection-end-column="104" />
+        <state vertical-scroll-proportion="-4.8">
+          <caret line="16" column="69" selection-start-line="16" selection-start-column="69" selection-end-line="16" selection-end-column="69" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/demo/index.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="3.4385383">
+          <caret line="138" column="36" selection-start-line="138" selection-start-column="36" selection-end-line="138" selection-end-column="36" />
           <folding />
         </state>
       </provider>
