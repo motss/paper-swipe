@@ -58,12 +58,12 @@ Example:
       display: block;
     }
 
-    #content {
+    :host ::content div[content] {
       will-change: transform;
       background: #ffffff;
     }
 
-    #underlay {
+    :host ::content div[underlay] {
       position: absolute;
       width: 100%;
     }
@@ -81,13 +81,13 @@ Example:
   </style>
 
   <template>
-    <div id="underlay">
-      <content select="[underlay]"></content>
-    </div>
+    <!--<template id="underlay">-->
+      <content id="underlay" select="[underlay]"></content>
+    <!--</template>-->
 
-    <div id="content">
-      <content select="[content]"></content>
-    </div>
+    <!--<template id="content">-->
+      <content id="content" select="[content]"></content>
+    <!--</template>-->
   </template>
 
 </dom-module>
@@ -98,6 +98,7 @@ Example:
     'use strict';
 
     var sharedPanel = null;
+    var node = null;
 
     function classNames(obj) {
       var classes = [];
@@ -230,7 +231,17 @@ Example:
          * If true, the draggable panel has been dragged.
          * It is used to ensure that the panel is dragging.
          */
-        doesItEvenTrack: {
+        tracking: {
+          type: Boolean,
+          value: false,
+          notify: true
+        },
+
+        /**
+         * If true, reset the draggable panel to its origin.
+         * It is used when it is a single-use draggable panel.
+         */
+        resetSwipe: {
           type: Boolean,
           value: false,
           notify: true
@@ -242,6 +253,9 @@ Example:
         // transitions only after the element is rendered and ready.
         this.transition = true;
         this.setScrollDirection(this._swipeAllowed() ? 'y' : 'all');
+//        console.log(this.$);
+          console.log(this.$$('#content'));
+        console.log(this.$$('#content').className);
       },
 
       listeners: {
@@ -300,14 +314,19 @@ Example:
       },
 
       _applyClass: function(transition, dragging, swipeLeft, swipeRight) {
-        this.$.content.className = classNames({
-          'style-scope': 'style-scope',
+//        this.$.content.className = classNames({
+          console.log(Polymer.dom(this.$$('#content')).getDistributedNodes());
+        console.log(node.className);
+
+        node.className = classNames({
+//          'style-scope': 'style-scope',
           'paper-swipe': 'paper-swipe',
           dragging: dragging,
           'swipe-left': swipeLeft,
           'swipe-right': swipeRight,
           transition: transition
         });
+        console.log(node.className);
       },
 
       _tapHandler: function (event) {
@@ -340,8 +359,12 @@ Example:
           sharedPanel = this;
           this._setDragging(true);
           if (this.dragging) {
-            this.width = this.$.content.offsetWidth;
+//            this.width = this.$.content.offsetWidth;
+            this.width = node.offsetWidth;
+//            console.log(Polymer.dom(this.$$('#content')).getDistributedNodes()[0].offsetWidth);
+            console.log(event.target.parentElement.offsetWidth);
             this.transition = false;
+            this.curPos = this.resetSwipe? 0: this.curPos;
           }
         }
       },
@@ -349,10 +372,10 @@ Example:
       _trackX: function(event) {
         if (this.dragging) {
           var dx = event.detail.dx,
-            dragDx;
+              dragDx;
           this.transitionDelta = dx;
           dragDx = this.AtEdge? this.curPos + dx: dx;
-          this.doesItEvenTrack = true;
+          this.tracking = true;
           this._moveDrawer(dragDx);
         }
       },
@@ -364,7 +387,10 @@ Example:
       _downHandler: function (event) {
         if (!this.dragging && !this.disableSwipe && !sharedPanel) {
 //        if (!this.dragging && !this.disableSwipe && !sharedPanel && this.validDelta) {
-          this.$.content.className = 'style-scope paper-swipe';
+          node = Polymer.dom(this.$$('#content')).getDistributedNodes()[0];
+          node.className = 'paper-swipe';
+//          this.$.content.className = 'style-scope paper-swipe';
+//          this.$$('#content').className = 'style-scope paper-swipe';
           // cancel selection
           event.preventDefault();
           // grab this panel
@@ -379,17 +405,18 @@ Example:
          * Specialty for when [AtEdge] is asserted, hold it back to the edge.
          */
         if (this._swipeAllowed() && this.AtEdge && !this.validDelta) {
-          this._applyClass(this.transition, this.dragging, this.swipeLeft, this.swipeRight);
+//          this._applyClass(this.transition, this.dragging, this.swipeLeft, this.swipeRight);
           this._moveDrawer(this.curPos);
           // release the panel
           sharedPanel = null;
+          node = null;
           return;
         }
 
         /**
          * tracking must be asserted.
          */
-        if (this._swipeAllowed() && this.doesItEvenTrack){
+        if (this._swipeAllowed() && this.tracking){
           /**
            *  to swipe to the leftmost edge:-
            *  - slide until [this.peekOffset] - [this.width].
@@ -401,8 +428,8 @@ Example:
            *  else vice versa for swiping to rightmsot edge and/ or either side.
            */
           var slideTo = this.width - this.peekOffset,
-            offsetLR = this.swipeRight? slideTo: -slideTo,
-            deltaLR;
+              offsetLR = this.swipeRight? slideTo: -slideTo,
+              deltaLR;
           if (!this.swipeLeft) {
             offsetLR = this.slideLeft? -slideTo: slideTo;
           }
@@ -416,10 +443,11 @@ Example:
             this.fire('edge', {message: 'onEdge!', target: event});
           }
           this.validDelta = false;
-          this.doesItEvenTrack = false;
+          this.tracking = false;
           this._moveDrawer(deltaLR);
           // release the panel
           sharedPanel = null;
+          node = null;
         }
       },
 
@@ -438,7 +466,8 @@ Example:
       },
 
       _moveDrawer: function(translateX) {
-        this.transform(this._transformForTranslateX(translateX), this.$.content);
+//        this.transform(this._transformForTranslateX(translateX), this.$.content);
+        this.transform(this._transformForTranslateX(translateX), node);
       }
     });
   })();
