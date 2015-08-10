@@ -8,9 +8,11 @@ behind it.
 Example:
 
     <paper-swipe disable-swipe>Swipe Gestures disabled</paper-swipe>
+    <paper-swipe reset-swipe>Reset panel position</paper-swipe>
     <paper-swipe left-swipe>Only Left Swipe</paper-swipe>
     <paper-swipe right-swipe>Only Right Swipe</paper-swipe>
     <paper-swipe on-tap-underlay='tapHandler'>Tap Event Handler</paper-swipe>
+    <paper-swipe on-edge='edgeHandler'>Panel is now at the edge of the screen</paper-swipe>
 
 `paper-swipe` allows user to use the custom DOM in the body to create basically any contents and it has two different
 sections which allows the customization by using the `content` and `underlay` attributes:
@@ -37,6 +39,16 @@ Example:
     <paper-swipe on-tap-underlay="tapHandler">
       <div underlay>Underlay content goes here...</div>
       <div content>Fire `tap-underlay` event when the panel is being clicked...</div>
+    </paper-swipe>
+
+`reset-swipe' attribute has been added as new feature to tell the user that the swiping panel has to return to its
+origin and it is usually used with `on-edge` event handler to perform the additional task:
+
+Example:
+
+    <paper-swipe on-edge="resetPanel">
+        <div underlay>Click to reset the panel from the edge to its origin...</div>
+        <div content>Swipe to remove the panel...</div>
     </paper-swipe>
 
 ## Demo
@@ -66,6 +78,18 @@ Example:
 <td>If true, only swiping to the right.</td>
 </tr>
 <tr>
+<th>disableSwipe</th>
+<td>boolean</td>
+<td>false</td>
+<td>If true, swiping is disabled.</td>
+</tr>
+<tr>
+<th>resetSwipe</th>
+<td>boolean</td>
+<td>false</td>
+<td>If true, the panel will return to its origin.</td>
+</tr>
+<tr>
 <th>peekOffset</th>
 <td>number</td>
 <td>30</td>
@@ -76,12 +100,6 @@ Example:
 <td>number</td>
 <td>80</td>
 <td>How many pixels needed to trigger auto-slide to the edge.</td>
-</tr>
-<tr>
-<th>disableSwipe</th>
-<td>boolean</td>
-<td>false</td>
-<td>If true, swiping is disabled.</td>
 </tr>
 </tbody>
 </table>
