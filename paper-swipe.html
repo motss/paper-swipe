@@ -57,6 +57,19 @@ Example:
         <div underlay>Click to reset the panel from the edge to its origin...</div>
         <div content>Swipe to remove the panel...</div>
     </paper-swipe>
+
+### Usable Attributes
+The followings are the attributes that can be set in the element:
+
+Name | Type | Default | Description
+---------------|---------|-------|-------------------------------------------------------------------------------
+`swipe-left` | Boolean | False | If true, only swiping to the left is allowed.
+`swipe-right` | Boolean | False | If true, only swiping to the right is allowed.
+`disable-swipe` | Boolean | False | If true, no swiping is allowed.
+`reset-swipe` | Boolean | False | If true, reset the position of the panel.
+`peek-offset` | Number | 30 | 30 pixels of the screen is shown from the edge of the screen.
+`slide-offet` | Number | 80 | Minimum 80 pixels of dragging will auto-slide the panel to the edge of the screen.
+
 @author motss
 @element paper-swipe
 @demo demo/index.html
