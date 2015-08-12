@@ -43,12 +43,21 @@ Example:
     </paper-swipe>
 
 `reset-swipe` attribute has been added as new feature to tell the user that the swiping panel has to return to its
-origin and it is usually used with `on-edge` event handler to perform the additional task:
+origin and it is usually used with `on-edge` event handler to perform the additional task.
+
+There are two ways to disable the swiping on the content panel by using `on-tap-underlay` or `on-click` event handler:
 
 Example:
 
-    <paper-swipe on-edge="resetPanel">
+    // To disable the swiping panel with onTapUnderlay event handler.
+    <paper-swipe reset-swipe on-edge="resetPanel" on-tap-underlay="disablePanel">
         <div underlay>Click to reset the panel from the edge to its origin...</div>
+        <div content>Swipe to remove the panel...</div>
+    </paper-swipe>
+
+    // To disable the swiping panel with onClick event handler on underlay.
+    <paper-swipe reset-swipe on-edge="resetPanel">
+        <div underlay on-click="disablePanel">Click to reset the panel from the edge to its origin...</div>
         <div content>Swipe to remove the panel...</div>
     </paper-swipe>
 
