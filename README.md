@@ -49,13 +49,11 @@ There are two ways to disable the swiping on the content panel by using `on-tap-
 
 Example:
 
-    // To disable the swiping panel with onTapUnderlay event handler.
     <paper-swipe reset-swipe on-edge="resetPanel" on-tap-underlay="disablePanel">
         <div underlay>Click to reset the panel from the edge to its origin...</div>
         <div content>Swipe to remove the panel...</div>
     </paper-swipe>
 
-    // To disable the swiping panel with onClick event handler on underlay.
     <paper-swipe reset-swipe on-edge="resetPanel">
         <div underlay on-click="disablePanel">Click to reset the panel from the edge to its origin...</div>
         <div content>Swipe to remove the panel...</div>
