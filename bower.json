@@ -1,19 +1,23 @@
 {
   "name": "paper-swipe",
-  "version": "1.0.0",
+  "version": "0.2.1",
   "authors": [
-    "Anonymous <anonymous@example.com>"
+    "motss <wes_ngrongsen@hotmail.com>"
   ],
-  "description": "An element providing a solution to no problem in particular.",
+  "description": "Custom Element with swiping feature named paper-swipe",
   "keywords": [
     "web-component",
     "web-components",
     "polymer",
-    "seed"
+    "seed",
+    "paper-swipe",
+    "swipe",
+    "paper",
+    "motss"
   ],
   "main": "paper-swipe.html",
-  "license": "http://polymer.github.io/LICENSE.txt",
-  "homepage": "https://github.com/<USERNAME>/seed-element/",
+  "license": "https://github.com/motss/paper-swipe/blob/master/LICENSE.txt",
+  "homepage": "https://github.com/motss/paper-swipe",
   "ignore": [
     "/.*",
     "/test/",
