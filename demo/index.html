@@ -127,9 +127,24 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       </div>
 
       <div>
-        <h4>reset swiping position!</h4>
+        <h4>reset swiping position with onClick on underlay!</h4>
         <paper-swipe id="tap" reset-swipe peek-offset="-24" on-edge="disableAction">
           <div underlay on-click="resetAction">
+            <paper-ripple></paper-ripple>
+            <div>Click to reset the position of the panel!</div>
+          </div>
+          <div content>
+            <paper-ripple></paper-ripple>
+            <div class="label">Reset Swipe Position</div>
+            <div>Swipe left or right to remove the panel.</div>
+          </div>
+        </paper-swipe>
+      </div>
+
+      <div>
+        <h4>reset swiping position with onTapUnderlay event handler!</h4>
+        <paper-swipe id="tap" reset-swipe peek-offset="-24" on-edge="disableAction" on-tap-underlay="resetAction">
+          <div underlay>
             <paper-ripple></paper-ripple>
             <div>Click to reset the position of the panel!</div>
           </div>
@@ -170,7 +185,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       swipe.resetAction = function (e) {
         var target = e.target;
-        while (target.localName !== 'paper-swipe'){
+        if (e.type === 'tap-underlay') {
+          target = e.detail.target.target;
+        }
+        while (target.localName !== 'paper-swipe') {
           target = target.parentElement;
         }
         target.removeAttribute('disable-swipe');

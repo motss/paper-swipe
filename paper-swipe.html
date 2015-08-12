@@ -415,6 +415,19 @@ Name | Type | Default | Description
       _upHandler: function (event) {
         this._setDragging(false);
         this.transition = true;
+
+        /**
+         *  Newly added check condition for resetSwipe.
+         *  It is to reset [curPos] and [[AtEdge].
+         */
+        if (this.resetSwipe && !this.tracking) {
+          this.AtEdge = false;
+          this.curPos = 0;
+          // release the panel! It is a MUST!!! unless declared more sharedPanel for multi-touch?
+          sharedPanel = null;
+          return;
+        }
+
         /**
          * Specialty for when [AtEdge] is asserted, hold it back to the edge.
          */
