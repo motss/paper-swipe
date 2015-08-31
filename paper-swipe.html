@@ -152,7 +152,6 @@ Name | Type | Default | Description
         _dragging: {
           type: Boolean,
           value: false,
-          readOnly: true,
           notify: true
         },
 
@@ -346,7 +345,7 @@ Name | Type | Default | Description
         this.$.content.className = classNames({
           'style-scope': 'style-scope',
           'paper-swipe': 'paper-swipe',
-          dragging: _dragging,
+          dragging: dragging,
           'swipe-left': swipeLeft,
           'swipe-right': swipeRight,
           transition: transition
@@ -381,7 +380,7 @@ Name | Type | Default | Description
       _trackStart: function(event) {
         if (this._swipeAllowed()) {
           sharedPanel = this;
-          this._setDragging(true);
+          this._dragging = true;
           if (this._dragging) {
             this.width = this.$.content.offsetWidth;
             this._transition = false;
@@ -420,7 +419,7 @@ Name | Type | Default | Description
       },
 
       _upHandler: function (event) {
-        this._setDragging(false);
+        this._dragging = false;
         this._transition = true;
 
         /**
