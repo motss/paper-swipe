@@ -149,7 +149,7 @@ Name | Type | Default | Description
         /**
          * Whether the user is dragging the content interactively
          */
-        dragging: {
+        _dragging: {
           type: Boolean,
           value: false,
           readOnly: true,
@@ -183,7 +183,7 @@ Name | Type | Default | Description
         /**
          * Whether the browser has support for the transform CSS property.
          */
-        hasTransform: {
+        _hasTransform: {
           type: Boolean,
           value: function () {
             return 'transform' in this.style;
@@ -193,7 +193,7 @@ Name | Type | Default | Description
         /**
          * Whether the transition is enabled.
          */
-        transition: {
+        _transition: {
           type: Boolean,
           value: false
         },
@@ -220,7 +220,7 @@ Name | Type | Default | Description
          * If true, swiping to the left is detected and it is only applied to swiping to either side.
          * Otherwise, use `swipeLeft' or 'swipeRight'.
          */
-        slideLeft: {
+        _slideLeft: {
           type: Boolean,
           notify: true
         },
@@ -228,7 +228,7 @@ Name | Type | Default | Description
         /**
          * Repetitively evaluating delta of the transitions.
          */
-        transitionDelta: {
+        _transitionDelta: {
           type: Number,
           observer: '_transitionDeltaChanged'
         },
@@ -236,7 +236,7 @@ Name | Type | Default | Description
         /**
          * If true, the `transitionDelta` meets the dragging requirements set by `peekOffset` and `slideOffset`.
          */
-        validDelta: {
+        _validDelta: {
           type: Boolean,
           value: false,
           notify: true
@@ -245,7 +245,7 @@ Name | Type | Default | Description
         /**
          * If true, draggable panel is now at the edge of the screen.
          */
-        atEdge: {
+        _atEdge: {
           type: Boolean,
           value: false,
           notify: true
@@ -254,7 +254,7 @@ Name | Type | Default | Description
         /**
          * Current pixel position of the draggable panel.
          */
-        curPos: {
+        _curPos: {
           type: Number,
           notify: true
         },
@@ -263,7 +263,7 @@ Name | Type | Default | Description
          * If true, the draggable panel has been dragged.
          * It is used to ensure that the panel is dragging.
          */
-        tracking: {
+        _tracking: {
           type: Boolean,
           value: false,
           notify: true
@@ -283,7 +283,7 @@ Name | Type | Default | Description
       ready: function() {
         // Avoid transition at the beginning e.g. page loads and enable
         // transitions only after the element is rendered and ready.
-        this.transition = true;
+        this._transition = true;
         this.setScrollDirection(this._swipeAllowed() ? 'y' : 'all');
       },
 
@@ -304,7 +304,7 @@ Name | Type | Default | Description
            * else return to original position.
            */
           if (this.swipeRight){
-            this.validDelta = this.AtEdge? newValue <= -this.slideOffset:newValue >= this.slideOffset;
+            this._validDelta = this._atEdge? newValue <= -this.slideOffset:newValue >= this.slideOffset;
           }
 
           /**
@@ -315,7 +315,7 @@ Name | Type | Default | Description
            * else return to original position.
            */
           if (this.swipeLeft) {
-            this.validDelta = this.AtEdge?  newValue >= this.slideOffset:newValue <= -this.slideOffset;
+            this._validDelta = this._atEdge?  newValue >= this.slideOffset:newValue <= -this.slideOffset;
           }
 
           /**
@@ -331,12 +331,12 @@ Name | Type | Default | Description
            */
           if (!this.swipeLeft && !this.swipeRight) {
             if (newValue > oldValue) {
-              this.slideLeft = false;
-              this.validDelta = newValue >= this.slideOffset;
+              this._slideLeft = false;
+              this._validDelta = newValue >= this.slideOffset;
             }
             if (newValue < oldValue) {
-              this.slideLeft = true;
-              this.validDelta = newValue <= -this.slideOffset;
+              this._slideLeft = true;
+              this._validDelta = newValue <= -this.slideOffset;
             }
           }
         }
@@ -346,7 +346,7 @@ Name | Type | Default | Description
         this.$.content.className = classNames({
           'style-scope': 'style-scope',
           'paper-swipe': 'paper-swipe',
-          dragging: dragging,
+          dragging: _dragging,
           'swipe-left': swipeLeft,
           'swipe-right': swipeRight,
           transition: transition
@@ -382,24 +382,24 @@ Name | Type | Default | Description
         if (this._swipeAllowed()) {
           sharedPanel = this;
           this._setDragging(true);
-          if (this.dragging) {
+          if (this._dragging) {
             this.width = this.$.content.offsetWidth;
-            this.transition = false;
+            this._transition = false;
             if (this.resetSwipe){
-              this.AtEdge = false;
-              this.curPos = 0;
+              this._atEdge = false;
+              this._curPos = 0;
             }
           }
         }
       },
 
       _trackX: function(event) {
-        if (this.dragging) {
+        if (this._dragging) {
           var dx = event.detail.dx,
             dragDx;
-          this.transitionDelta = dx;
-          dragDx = this.AtEdge? this.curPos + dx: dx;
-          this.tracking = true;
+          this._transitionDelta = dx;
+          dragDx = this._atEdge? this._curPos + dx: dx;
+          this._tracking = true;
           this._moveDrawer(dragDx);
         }
       },
@@ -409,8 +409,8 @@ Name | Type | Default | Description
       },
 
       _downHandler: function (event) {
-        if (!this.dragging && !this.disableSwipe && !sharedPanel) {
-//        if (!this.dragging && !this.disableSwipe && !sharedPanel && this.validDelta) {
+        if (!this._dragging && !this.disableSwipe && !sharedPanel) {
+//        if (!this.dragging && !this.disableSwipe && !sharedPanel && this._validDelta) {
           this.$.content.className = 'style-scope paper-swipe';
           // cancel selection
           event.preventDefault();
@@ -421,15 +421,15 @@ Name | Type | Default | Description
 
       _upHandler: function (event) {
         this._setDragging(false);
-        this.transition = true;
+        this._transition = true;
 
         /**
          *  Newly added check condition for resetSwipe.
          *  It is to reset [curPos] and [[AtEdge].
          */
-        if (this.resetSwipe && !this.tracking) {
-          this.AtEdge = false;
-          this.curPos = 0;
+        if (this.resetSwipe && !this._tracking) {
+          this._atEdge = false;
+          this._scurPos = 0;
           // release the panel! It is a MUST!!! unless declared more sharedPanel for multi-touch?
           sharedPanel = null;
           return;
@@ -438,9 +438,9 @@ Name | Type | Default | Description
         /**
          * Specialty for when [AtEdge] is asserted, hold it back to the edge.
          */
-        if (this._swipeAllowed() && this.AtEdge && !this.validDelta) {
-          this._applyClass(this.transition, this.dragging, this.swipeLeft, this.swipeRight);
-          this._moveDrawer(this.curPos);
+        if (this._swipeAllowed() && this._atEdge && !this._validDelta) {
+          this._applyClass(this._transition, this._dragging, this.swipeLeft, this.swipeRight);
+          this._moveDrawer(this._curPos);
           // release the panel
           sharedPanel = null;
           return;
@@ -449,7 +449,7 @@ Name | Type | Default | Description
         /**
          * tracking must be asserted.
          */
-        if (this._swipeAllowed() && this.tracking){
+        if (this._swipeAllowed() && this._tracking){
           /**
            *  to swipe to the leftmost edge:-
            *  - slide until [this.peekOffset] - [this.width].
@@ -464,19 +464,19 @@ Name | Type | Default | Description
             offsetLR = this.swipeRight? slideTo: -slideTo,
             deltaLR;
           if (!this.swipeLeft) {
-            offsetLR = this.slideLeft? -slideTo: slideTo;
+            offsetLR = this._slideLeft? -slideTo: slideTo;
           }
-          deltaLR  = this.validDelta && !this.AtEdge? offsetLR: null;
+          deltaLR  = this._validDelta && !this._atEdge? offsetLR: null;
           // apply transition CSS before animation.
-          this._applyClass(this.transition, this.dragging, this.swipeLeft, this.swipeRight);
+          this._applyClass(this._transition, this._dragging, this.swipeLeft, this.swipeRight);
 
-          this.curPos = this.AtEdge? null: deltaLR;
-          this.AtEdge = !(deltaLR === null);
-          if (this.AtEdge) {
+          this._curPos = this._atEdge? null: deltaLR;
+          this._atEdge = !(deltaLR === null);
+          if (this._atEdge) {
             this.fire('edge', {message: 'onEdge!', target: event});
           }
-          this.validDelta = false;
-          this.tracking = false;
+          this._validDelta = false;
+          this._tracking = false;
           this._moveDrawer(deltaLR);
           // release the panel
           sharedPanel = null;
