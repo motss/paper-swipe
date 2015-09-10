@@ -279,8 +279,26 @@ Name | Type | Default | Description
         // Avoid transition at the beginning e.g. page loads and enable
         // transitions only after the element is rendered and ready.
         this._transition = true;
-        this.setScrollDirection(this._swipeAllowed() ? 'y' : 'all');
+        this.setScrollDirection(this._swipeAllowed()? 'y' : 'all');
       },
+
+      // Element Behaviorset
+
+      /**
+       * The `edge` event is fired whenever `_atEdge` is set to true which
+       * indicates that the current position of the draggable panel is now at
+       * the edge of the viewport.
+       *
+       * @event edge
+       * @detail {{message: 'panel-on-edge', target: event}}
+       */
+
+      /**
+       * The 'tap-underlay' event is fired whenever '_tapHandler' is called.
+       *
+       * @event tap-underlay
+       * @detail {{nodeName: 'underlay', target: event}}
+       */
 
       listeners: {
         track: '_onTrack',
@@ -350,7 +368,7 @@ Name | Type | Default | Description
 
       _tapHandler: function (event) {
         // when disableSwipe is true, only click event can be triggered!
-        this.fire('tap-underlay', {message: 'underlay', target: event});
+        this.fire('tap-underlay', {nodeName: 'underlay', target: event});
       },
 
       _onTrack: function (event) {
@@ -468,7 +486,7 @@ Name | Type | Default | Description
           this._curPos = this._atEdge? null: deltaLR;
           this._atEdge = !(deltaLR === null);
           if (this._atEdge) {
-            this.fire('edge', {message: 'onEdge!', target: event});
+            this.fire('edge', {message: 'panel-on-edge', target: event});
           }
           this._validDelta = false;
           this._tracking = false;
