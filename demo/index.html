@@ -4,150 +4,235 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
     <title>paper-swipe Demo</title>
-    <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+    <script src="../../webcomponentsjs/webcomponents-lite.min.js"></script>
     <link rel="import" href="../paper-swipe.html">
-    <link rel="import" href="../../paper-styles/color.html">
-    <link rel="import" href="../../iron-flex-layout/iron-flex-layout.html">
+    <link rel="import" href="../../paper-styles/paper-styles.html">
+    <link rel="import" href="../../paper-styles/demo-pages.html">
     <link rel="import" href="../../paper-ripple/paper-ripple.html">
+    <link rel="import" href="../../paper-checkbox/paper-checkbox.html">
 
     <style is="custom-style">
-      body {
-        overflow-x: hidden;
-
-        @apply(--layout-vertical);
-        @apply(--layout-flex-auto);
+      .horizontal-section-container {
+        display: block;
       }
 
-      div[content]{
-        padding: 16px;
-        background: var(--paper-grey-300, #e0e0e0);
-      }
-
-      div[underlay]{
-        padding: 24px;
-        background: var(--paper-teal-500, #009688);
+      .horizontal-section {
+        min-width: 130px;
       }
 
       h4 {
-        margin-bottom: 0;
         text-transform: capitalize;
       }
 
-      .label {
-        text-transform: uppercase;
+      paper-checkbox {
+        margin-bottom: 20px;
+      }
+
+      paper-swipe [content], [underlay] {
+        text-align: justify;
+        padding: 20px;
+        color: var(--text-primary-color);
+      }
+
+      paper-swipe [content] {
+        background: var(--paper-blue-700, #1976D2);
+      }
+
+      paper-swipe [underlay] {
+        background: var(--paper-orange-500, #FF9800);
+      }
+
+      .ev-name {
+        font-style: italic;
         font-weight: bold;
+      }
+
+      .stat-flag {
+        text-align: right;
+        @apply(--layout-flex-auto);
+      }
+
+      .ctrl-div {
+        @apply(--layout);
       }
     </style>
   </head>
-  <body unresolved>
+  <body>
     <template is="dom-bind" id="swipe">
-      <div>
-        <h4>disabled swipe</h4>
-        <paper-swipe id="disabled" disable-swipe>
-          <div id="content" content>
-            <div class="label">Swipe disabled</div>
-            <div>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Assumenda, praesentium.</div>
+      <div class="horizontal-section-container">
+        <div>
+          <h4>disable swipe</h4>
+          <div class="horizontal-section">
+            <div class="ctrl-div">
+              <paper-checkbox checked="{{disableCheck}}">check to disable swiping</paper-checkbox>
+              <span class="stat-flag">disable-swipe: <span>{{disableCheck}}</span></span>
+            </div>
+            <paper-swipe id="disabled" disable-swipe="{{disableCheck}}">
+              <div id="content" content>
+                <div class="label">Swipe disabled</div>
+                <div>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Assumenda, praesentium.</div>
+              </div>
+            </paper-swipe>
           </div>
-        </paper-swipe>
-      </div>
+        </div>
 
-      <div>
-        <h4>left swipe only</h4>
-        <paper-swipe id="left" swipe-left>
-          <div underlay>
-            <div>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Maiores, voluptas.</div>
+        <div>
+          <h4>left swipe only</h4>
+          <div class="horizontal-section">
+            <div class="ctrl-div">
+              <paper-checkbox checked="{{leftCheck}}">check to enable only left swiping</paper-checkbox>
+              <span class="stat-flag">swipe-left: <span>{{leftCheck}}</span></span>
+            </div>
+            <paper-swipe id="left" swipe-left="{{leftCheck}}">
+              <div underlay>
+                <div>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Maiores, voluptas.</div>
+              </div>
+              <div content>
+                <div class="label">Only Swipe Left is allowed</div>
+                <div>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolore, eaque.</div>
+              </div>
+            </paper-swipe>
           </div>
-          <div content>
-            <div class="label">Only Swipe Left is allowed</div>
-            <div>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolore, eaque.</div>
-          </div>
-        </paper-swipe>
-      </div>
+        </div>
 
-      <div>
-        <h4>right swipe only</h4>
-        <paper-swipe id="right" swipe-right>
-          <div underlay>
-            <div>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Natus, repellendus?</div>
+        <div>
+          <h4>right swipe only</h4>
+          <div class="horizontal-section">
+            <div class="ctrl-div">
+              <paper-checkbox checked="{{rightCheck}}">check to enable only right swiping</paper-checkbox>
+              <span class="stat-flag">swipe-right: <span>{{rightCheck}}</span></span>
+            </div>
+            <paper-swipe id="right" swipe-right="{{rightCheck}}">
+              <div underlay>
+                <div>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Natus, repellendus?</div>
+              </div>
+              <div content>
+                <div class="label">Only Swipe Right is allowed</div>
+                <div>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Adipisci, dolore?</div>
+              </div>
+            </paper-swipe>
           </div>
-          <div content>
-            <div class="label">Only Swipe Right is allowed</div>
-            <div>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Adipisci, dolore?</div>
-          </div>
-        </paper-swipe>
-      </div>
+        </div>
 
-      <div>
-        <h4>either side swiping</h4>
-        <paper-swipe id="either">
-          <div underlay>
-            <div>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Iure, temporibus.</div>
+        <div>
+          <h4>either side swiping</h4>
+          <div class="horizontal-section">
+            <div class="ctrl-div">
+              <paper-checkbox checked disabled>By default, can be swiped to either side</paper-checkbox>
+            </div>
+            <paper-swipe id="either">
+              <div underlay>
+                <div>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Iure, temporibus.</div>
+              </div>
+              <div content>
+                <div class="label">Swipe to any side</div>
+                <div>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ullam, vel.</div>
+              </div>
+            </paper-swipe>
           </div>
-          <div content>
-            <div class="label">Swipe to any side</div>
-            <div>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ullam, vel.</div>
-          </div>
-        </paper-swipe>
-      </div>
+        </div>
 
-      <div>
-        <h4>with tap handler</h4>
-        <paper-swipe id="tap" swipe-left on-tap-underlay="tapAction" on-edge="edgeAction">
-          <div underlay>
-            <paper-ripple></paper-ripple>
-            <div>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eaque, quae!</div>
+        <div>
+          <h4>with tap handler</h4>
+          <div class="horizontal-section">
+            <div class="ctrl-div">
+              <paper-checkbox checked disabled>Left swiping is enabled here!</paper-checkbox>
+            </div>
+            <div class="">
+              <paper-checkbox checked disabled><span class="ev-name">tap-underlay</span> event will be fired here!</paper-checkbox>
+              <!-- <span class="stat-flag">swipe-left: <span>{{leftCheck}}</span></span> -->
+            </div>
+            <paper-swipe id="tap" swipe-left on-tap-underlay="tapAction">
+              <div underlay>
+                <paper-ripple></paper-ripple>
+                <div>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eaque, quae!</div>
+              </div>
+              <div content>
+                <paper-ripple></paper-ripple>
+                <div class="label">Fire tap-underlay event</div>
+                <div>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aut, sunt!</div>
+              </div>
+            </paper-swipe>
           </div>
-          <div content>
-            <paper-ripple></paper-ripple>
-            <div class="label">Fire 'tap-underlay' event</div>
-            <div>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aut, sunt!</div>
-          </div>
-        </paper-swipe>
-      </div>
+        </div>
 
-      <div>
-        <h4>fire event when content has been dragged to the edge!</h4>
-        <paper-swipe id="tap" swipe-left on-edge="edgeAction">
-          <div underlay>
-            <paper-ripple></paper-ripple>
-            <div>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ea, ipsa!</div>
+        <div>
+          <h4>fire event when content has been dragged to the edge!</h4>
+          <div class="horizontal-section">
+            <div class="ctrl-div">
+              <paper-checkbox checked disabled>Left swiping only!</paper-checkbox>
+            </div>
+            <div class="">
+              <paper-checkbox checked disabled>Swipe to fire <span class="ev-name">edge</span> event!</paper-checkbox>
+              <!-- <span class="stat-flag">swipe-right: <span>{{rightCheck}}</span></span> -->
+            </div>
+            <paper-swipe id="tap" swipe-left on-edge="edgeAction">
+              <div underlay>
+                <paper-ripple></paper-ripple>
+                <div>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ea, ipsa!</div>
+              </div>
+              <div content>
+                <paper-ripple></paper-ripple>
+                <div class="label">Fire 'edge' event</div>
+                <div>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aut, sunt!</div>
+              </div>
+            </paper-swipe>
           </div>
-          <div content>
-            <paper-ripple></paper-ripple>
-            <div class="label">Fire 'edge' event</div>
-            <div>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aut, sunt!</div>
-          </div>
-        </paper-swipe>
-      </div>
+        </div>
 
-      <div>
-        <h4>reset swiping position with onClick on underlay!</h4>
-        <paper-swipe id="tap" reset-swipe peek-offset="-24" on-edge="disableAction">
-          <div underlay on-click="resetAction">
-            <paper-ripple></paper-ripple>
-            <div>Click to reset the position of the panel!</div>
+        <div>
+          <h4>reset swiping position with onClick on underlay!</h4>
+          <div class="horizontal-section">
+            <div class="ctrl-div">
+              <paper-checkbox checked disabled>Swipe left or right...</paper-checkbox>
+            </div>
+            <div>
+              <paper-checkbox checked disabled>Tap on underlay (orange panel) to dismiss swipe!</paper-checkbox>
+            </div>
+            <div>
+              <paper-checkbox checked disabled>This is achieved by using <span class="ev-name">on-click</span> event!</paper-checkbox>
+              <!-- <span class="stat-flag">swipe-right: <span>{{rightCheck}}</span></span> -->
+            </div>
+            <paper-swipe id="tap" reset-swipe peek-offset="-24" on-edge="disableAction">
+              <div underlay on-click="resetAction">
+                <paper-ripple></paper-ripple>
+                <div>Click to reset the position of the panel!</div>
+              </div>
+              <div content>
+                <paper-ripple></paper-ripple>
+                <div class="label">Reset Swipe Position</div>
+                <div>Swipe left or right to remove the panel.</div>
+              </div>
+            </paper-swipe>
           </div>
-          <div content>
-            <paper-ripple></paper-ripple>
-            <div class="label">Reset Swipe Position</div>
-            <div>Swipe left or right to remove the panel.</div>
-          </div>
-        </paper-swipe>
-      </div>
+        </div>
 
-      <div>
-        <h4>reset swiping position with onTapUnderlay event handler!</h4>
-        <paper-swipe id="tap" reset-swipe peek-offset="-24" on-edge="disableAction" on-tap-underlay="resetAction">
-          <div underlay>
-            <paper-ripple></paper-ripple>
-            <div>Click to reset the position of the panel!</div>
+        <div>
+          <h4>reset swiping position with onTapUnderlay event handler!</h4>
+          <div class="horizontal-section">
+            <div class="ctrl-div">
+              <paper-checkbox checked disabled>Swipe left or right...</paper-checkbox>
+            </div>
+            <div>
+              <paper-checkbox checked disabled>Tap on underlay (orange panel) to dismiss swipe!</paper-checkbox>
+            </div>
+            <div>
+              <paper-checkbox checked disabled>This is achieved by using <span class="ev-name">tap-underlay</span> event!</paper-checkbox>
+              <!-- <span class="stat-flag">swipe-right: <span>{{rightCheck}}</span></span> -->
+            </div>
+            <paper-swipe id="tap" reset-swipe peek-offset="-24" on-edge="disableAction" on-tap-underlay="resetAction">
+              <div underlay>
+                <paper-ripple></paper-ripple>
+                <div>Click to reset the position of the panel!</div>
+              </div>
+              <div content>
+                <paper-ripple></paper-ripple>
+                <div class="label">Reset Swipe Position</div>
+                <div>Swipe left or right to remove the panel.</div>
+              </div>
+            </paper-swipe>
           </div>
-          <div content>
-            <paper-ripple></paper-ripple>
-            <div class="label">Reset Swipe Position</div>
-            <div>Swipe left or right to remove the panel.</div>
-          </div>
-        </paper-swipe>
+        </div>
       </div>
     </template>
 

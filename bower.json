@@ -1,6 +1,6 @@
 {
   "name": "paper-swipe",
-  "version": "0.2.7",
+  "version": "0.2.8",
   "authors": [
     "motss <wes_ngrongsen@hotmail.com>"
   ],
@@ -24,6 +24,7 @@
     "/demo/"
   ],
   "dependencies": {
+    "paper-checkbox": "PolymerElements/paper-checkbox#~1.0.10",
     "polymer": "Polymer/polymer#^1.0.0"
   },
   "devDependencies": {

@@ -98,9 +98,6 @@ Name | Type | Default | Description
     }
 
     .transition {
-      /*transition: -webkit-transform ease-in-out 0.3s, width ease-in-out 0.3s;*/
-      /*transition: transform ease-in-out 0.2s, width ease-in-out 0.2s;*/
-
       transition: -webkit-transform cubic-bezier(.55,0,.1,1) 0.3s;
       transition: -moz-transform cubic-bezier(.55,0,.1,1) 0.3s;
       transition: -mx-transform cubic-bezier(.55,0,.1,1) 0.3s;
@@ -147,8 +144,7 @@ Name | Type | Default | Description
          */
         _dragging: {
           type: Boolean,
-          value: false,
-          notify: true
+          value: false
         },
 
         /**
@@ -216,8 +212,7 @@ Name | Type | Default | Description
          * Otherwise, use `swipeLeft' or 'swipeRight'.
          */
         _slideLeft: {
-          type: Boolean,
-          notify: true
+          type: Boolean
         },
 
         /**
@@ -233,8 +228,7 @@ Name | Type | Default | Description
          */
         _validDelta: {
           type: Boolean,
-          value: false,
-          notify: true
+          value: false
         },
 
         /**
@@ -242,16 +236,14 @@ Name | Type | Default | Description
          */
         _atEdge: {
           type: Boolean,
-          value: false,
-          notify: true
+          value: false
         },
 
         /**
          * Current pixel position of the draggable panel.
          */
         _curPos: {
-          type: Number,
-          notify: true
+          type: Number
         },
 
         /**
@@ -260,8 +252,7 @@ Name | Type | Default | Description
          */
         _tracking: {
           type: Boolean,
-          value: false,
-          notify: true
+          value: false
         },
 
         /**
