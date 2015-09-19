@@ -60,7 +60,7 @@ Example:
     </paper-swipe>
 
 ## Demo
-[paper-swipe DEMO](http://motss.github.io/paper-swipe/components/paper-swipe/demo/index.html)
+[paper-swipe demo + boilerplate generator](http://motss.github.io/paper-swipe/components/paper-swipe/demo/index.html)
 
 ### Attributes
 <table>
