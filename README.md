@@ -120,9 +120,9 @@ Example:
 2. Load the web component and the dependencies
 
 ```html
-<script src="bower_components/webcomponentsjs/webcomponents.js"></script>
-<link rel="import" href="bower_components/polymer/polymer.html">
-<link rel="import" href="bower_components/paper-swipe/paper-swipe.html">
+<script src="/path-to-bower-components/webcomponentsjs/webcomponents-lite.min.js"></script>
+<link rel="import" href="/path-to-bower-components/polymer/polymer.html">
+<link rel="import" href="/path-to-bower-components/paper-swipe/paper-swipe.html">
 ```
 
 3. Markup with &lt;paper-swipe&gt;&lt;/paper-swipe&gt;
