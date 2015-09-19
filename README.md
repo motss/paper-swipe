@@ -125,7 +125,7 @@ Example:
 <link rel="import" href="bower_components/paper-swipe/paper-swipe.html">
 ```
 
-3. Markup with &lt;paper-swipe&gt;
+3. Markup with &lt;paper-swipe&gt;&lt;/paper-swipe&gt;
 
 4. Done
 
