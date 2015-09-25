@@ -1,6 +1,6 @@
 {
   "name": "paper-swipe",
-  "version": "0.3.1",
+  "version": "0.4.0",
   "authors": [
     "motss <wes_ngrongsen@hotmail.com>"
   ],
@@ -16,12 +16,13 @@
     "motss"
   ],
   "main": "paper-swipe.html",
-  "license": "https://github.com/motss/paper-swipe/blob/master/LICENSE.txt",
+  "license": "MIT",
   "homepage": "https://github.com/motss/paper-swipe",
   "ignore": [
     "/.*",
     "/test/",
-    "/demo/"
+    "LICENSE",
+    "README.md"
   ],
   "dependencies": {
     "paper-checkbox": "PolymerElements/paper-checkbox#~1.0.10",
