@@ -22,8 +22,8 @@
     "/.*",
     "/test/",
     "/demo/",
-    LICENSE,
-    README.md
+    "LICENSE",
+    "README.md"
   ],
   "dependencies": {
     "paper-checkbox": "PolymerElements/paper-checkbox#~1.0.10",
