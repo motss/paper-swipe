@@ -20,10 +20,7 @@
   "homepage": "https://github.com/motss/paper-swipe",
   "ignore": [
     "/.*",
-    "/test/",
-    "/demo/",
-    "LICENSE",
-    "README.md"
+    "/test/"
   ],
   "dependencies": {
     "paper-checkbox": "PolymerElements/paper-checkbox#~1.0.10",
