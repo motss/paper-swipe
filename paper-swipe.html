@@ -78,38 +78,37 @@ At the end of the demo, there is a code generator that allows you to play around
 -->
 
 <dom-module id="paper-swipe">
-
-  <style>
-    :host {
-      position: relative;
-      display: block;
-
-      -webkit-user-select: none;
-      -moz-user-select: none;
-      -ms-user-select: none;
-      user-select: none;
-    }
-
-    #content {
-      will-change: transform;
-      background: #ffffff;
-    }
-
-    #underlay {
-      position: absolute;
-      width: 100%;
-    }
-
-    .transition {
-      transition: -webkit-transform cubic-bezier(.55,0,.1,1) 0.3s;
-      transition: -moz-transform cubic-bezier(.55,0,.1,1) 0.3s;
-      transition: -mx-transform cubic-bezier(.55,0,.1,1) 0.3s;
-      transition: -o-transform cubic-bezier(.55,0,.1,1) 0.3s;
-      transition: transform cubic-bezier(.55,0,.1,1) 0.3s;
-    }
-  </style>
-
   <template>
+    <style>
+      :host {
+        position: relative;
+        display: block;
+
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+      }
+
+      #content {
+        will-change: transform;
+        background: #ffffff;
+      }
+
+      #underlay {
+        position: absolute;
+        width: 100%;
+      }
+
+      .transition {
+        transition: -webkit-transform cubic-bezier(.55,0,.1,1) 0.3s;
+        transition: -moz-transform cubic-bezier(.55,0,.1,1) 0.3s;
+        transition: -mx-transform cubic-bezier(.55,0,.1,1) 0.3s;
+        transition: -o-transform cubic-bezier(.55,0,.1,1) 0.3s;
+        transition: transform cubic-bezier(.55,0,.1,1) 0.3s;
+      }
+    </style>
+
     <div id="underlay">
       <content select="[underlay]"></content>
     </div>
