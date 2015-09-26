@@ -1,5 +1,6 @@
-# paper-swipe
 [![GitHub version](https://badge.fury.io/gh/motss%2Fpaper-swipe.svg)](http://badge.fury.io/gh/motss%2Fpaper-swipe)
+
+# paper-swipe
 
 See the [component page](http://motss.github.io/paper-swipe/components/paper-swipe/) for more information.
 
