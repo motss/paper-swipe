@@ -1,4 +1,5 @@
 [![GitHub version](https://badge.fury.io/gh/motss%2Fpaper-swipe.svg)](http://badge.fury.io/gh/motss%2Fpaper-swipe)
+[![Bower version](https://badge.fury.io/bo/paper-swipe.svg)](http://badge.fury.io/bo/paper-swipe)
 
 # paper-swipe
 
