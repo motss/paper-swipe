@@ -3,6 +3,15 @@
 
 # paper-swipe
 
+## Update (1.0.0)
+Highlights of v1.0.0:
+- Added `fade` attribute for simple fade in/ fade out effect when swiping.
+- Removed `resetSwipe` attribute which is redundant and being taken care by new method `resetPosition()`.
+- Fixed layout issue on Safari Mobile.
+- Added custom mixins to style the element.
+- Prettier demo.
+- Code restructured.
+
 See the [component page](http://motss.github.io/paper-swipe/components/paper-swipe/) for more information.
 
 `paper-swipe` provides enables swipe gestures to swipe content to either the left or the right to unveil the underlay
