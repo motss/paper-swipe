@@ -1,4 +1,5 @@
 <link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../iron-resizable-behavior/iron-resizable-behavior.html">
 <!--
 `paper-swipe` provides enables swipe gestures to swipe content to either the left or the right to unveil the underlay
 behind it.
@@ -7,6 +8,7 @@ Example:
 
     <paper-swipe>By default, it can be swiped to either the left or the right.</paper-swipe>
     <paper-swipe disable-swipe>Swipe Gestures disabled</paper-swipe>
+    <paper-swipe fade>Swipe with fade in/ fade out effect</paper-swipe>
     <paper-swipe left-swipe>Only Left Swipe</paper-swipe>
     <paper-swipe right-swipe>Only Right Swipe</paper-swipe>
     <paper-swipe on-tap-underlay='tapHandler'>Tap Event Handler</paper-swipe>
@@ -22,7 +24,7 @@ Example:
       <div content>Content of swiping element goes here...</div>
     </paper-swipe>
 
-### Event handling
+## Event handling
 
 `paper-swipe` has been added some features to fire certain events such as `tap-underlay` and `edge` so that user can
 make use of it to perform additional functions as you like:
@@ -53,7 +55,29 @@ Example:
         <div content>Swipe to remove the panel...</div>
     </paper-swipe>
 
-### Generating Element's Boilerplate
+## Styling
+Note, it's important that specifying explicit height to the `paper-swipe` will render both the `content` and `underlay` layers to have the same height. Especially when multiple `paper-swipe` on the same document, explicit height will make all elements look consistent.
+
+    paper-swipe {
+      height: 100px;
+    }
+
+    paper-swipe {
+      --paper-swipe: {
+        height: 100px;
+      };
+    }
+
+The following custom properties and mixins are also available for styling:
+
+Custom mixin | Description | Default
+----------------|-------------|----------
+`--paper-swipe` | `Mixin applied to paper-swipe` | `{}`
+`--paper-swipe-swipeable-container` | `Mixin applied to paper-swipe-swipeable-container` | `{}`
+`--paper-swipe-content` | `Mixin applied to swipeable content` | `{}`
+`--paper-swipe-underlay` | `Mixin applied to underlay beneath the swipeable content` | `{}`
+
+## Generating Element's Boilerplate
 At the end of the demo, there is a code generator that allows you to play around with to customize and generate boilerplate code of this custom element and really hoping that the section could help you to gain better understanding about how to utilize this element as well as to provide a simple and straightforward picture on which attributes that this element provides can be applied with and work well with one another.
 
 @author motss
@@ -80,23 +104,23 @@ At the end of the demo, there is a code generator that allows you to play around
         box-sizing: inherit;
       }
 
-      div.swipeable-container {
-        position: absolute;
-        @apply(--paper-swipe-swipeable-container);
-      }
       div.swipeable-container,
       div.swipeable-container > ::content > *{
         width: 100%;
         height: 100%;
+        position: absolute;
+        top: 0;
+        box-sizing: border-box;
+      }
+      div.swipeable-container {
+        @apply(--paper-swipe-swipeable-container);
       }
 
-      div.swipeable-container > ::content [underlay]{
-        position: absolute;
+      div.swipeable-container > ::content > [underlay]{
         @apply(--paper-swipe-underlay);
       }
 
-      div.swipeable-container > ::content [content] {
-        position: absolute;
+      div.swipeable-container > ::content > [content] {
         will-change: transform;
         @apply(--paper-swipe-content);
       }
@@ -235,6 +259,10 @@ At the end of the demo, there is a code generator that allows you to play around
         _content: Object,
       },
 
+      behaviors: [
+        Polymer.IronResizableBehavior
+      ],
+
       ready: function() {
         // Avoid transition at the beginning e.g. page loads and enable
         // transitions only after the element is rendered and ready.
@@ -245,7 +273,9 @@ At the end of the demo, there is a code generator that allows you to play around
       attached: function() {
         // on child element attached, inherit the height of the content.
         var _content = Polymer.dom(this.$.content).getDistributedNodes()[0];
-        this.style.height = _content.offsetHeight + 'px';
+        // this.async(function() {
+        //   this.style.height = _content.offsetHeight + 'px';
+        // }, 1);
         // save effective children object.
         this.set('_content', _content);
       },
@@ -272,7 +302,8 @@ At the end of the demo, there is a code generator that allows you to play around
         'track': '_onTrack',
         'down': '_downHandler',
         'up': '_upHandler',
-        'tap': '_tapHandler'
+        'tap': '_tapHandler',
+        'iron-resize': '_onIronResize'
       },
 
       _transitionDeltaChanged: function (newValue, oldValue) {
@@ -478,6 +509,17 @@ At the end of the demo, there is a code generator that allows you to play around
         this.set('_curPos', 0);
         // fire event when position is reset.
         this.fire('position-reset');
+      },
+
+      _onIronResize: function() {
+        // console.log('paper-swipe-resize');
+        // var _content = this._content;
+        // if (_content && this._toUpdateHeight) {
+        //   this.async(function() {
+        //     console.log(this._content.offsetHeight);
+        //     this.style.height = _content.offsetHeight + 'px';
+        //   }, 1);
+        // }
       },
 
     });

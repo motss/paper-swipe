@@ -1,0 +1,123 @@
+<link rel="import" href="../../polymer/polymer.html">
+
+<link rel="import" href="../../iron-list/iron-list.html">
+
+<link rel="import" href="../../paper-swipe/paper-swipe.html">
+<link rel="import" href="../../paper-item/paper-icon-item.html">
+
+<dom-module id="swipe-list">
+  <template strip-whitespace>
+    <style>
+      :host {
+        display: block;
+        box-sizing: border-box;
+        height: 900px;
+      }
+
+      *, *:before, *:after {
+        box-sizing: inherit;
+      }
+
+      iron-list {
+        @apply(--layout-fit);
+      }
+      .swipe-item {
+        height: 64px;
+        --paper-swipe-content: {
+          background-color: #fff;
+          border-bottom: 1px solid #ddd;
+          padding: 12px;
+        };
+        --paper-swipe-underlay: {
+          padding: 12px;
+        };
+      }
+      .swipe-avatar {
+        border-radius: 50%;
+        /*background-color: #bdbdbd;*/
+        height: 40px;
+        width: 40px;
+        display: inline-block;
+        overflow: hidden;
+        background: #ccc;
+      }
+      .swipe-underlay {
+        color: #e0e0e0;
+      }
+      .a {
+        background-color: #1976D2;
+      }
+      .b {
+        background-color: #D32F2F;
+      }
+      .c {
+        background-color: #0097A7;
+      }
+      .d {
+        background-color: #388E3C;
+      }
+      .e {
+        background-color: #FBC02D;
+      }
+      .f {
+        background-color: #C2185B;
+      }
+      .g {
+        background-color: #7B1FA2;
+      }
+    </style>
+
+    <iron-list id="swipeList" items="[[swipeList]]">
+      <template strip-whitespace>
+        <paper-swipe class="swipe-item" peek-offset="0" fade on-edge="_onEdge">
+          <paper-icon-item content>
+            <div class$="swipe-avatar[[_randomColor(index)]]" item-icon></div>
+            [[index]], [[item.content]]
+          </paper-icon-item>
+          <div underlay class$="swipe-underlay[[_randomColor(index)]]">
+            [[item.underlay]]
+          </div>
+        </paper-swipe>
+      </template>
+    </iron-list>
+  </template>
+  <script>
+    Polymer({
+      is: 'swipe-list',
+
+      properties: {
+        swipeList: {
+          type: Array,
+          value: function() {
+            for (var i = 0, j = []; i < 100; i++) {
+              j.push({
+                content: 'Lorem ipsum dolor sit amet.',
+                underlay: 'Lorem ipsum.'
+              });
+            }
+            return j;
+          }
+        },
+
+      },
+
+      _randomColor: function() {
+        var _colors = ['a', 'b', 'c', 'd', 'e', 'f', 'g', ''];
+        var _n = Math.floor(Math.random() * 8);
+        console.log(_n);
+        var _sc = ' ' + _colors[_n];
+        return _sc;
+      },
+
+      _onEdge: function(ev) {
+        console.log(ev);
+        var _modelItem = ev.model.item;
+        var _target = ev.target;
+        this.swipeList.splice(_modelItem, 1);
+        _target.remove();
+        this.$.swipeList.updateSizeForItem(_modelItem);
+      },
+
+    });
+  </script>
+</dom-module>
