@@ -7,7 +7,6 @@ Example:
 
     <paper-swipe>By default, it can be swiped to either the left or the right.</paper-swipe>
     <paper-swipe disable-swipe>Swipe Gestures disabled</paper-swipe>
-    <paper-swipe reset-swipe>Reset panel position</paper-swipe>
     <paper-swipe left-swipe>Only Left Swipe</paper-swipe>
     <paper-swipe right-swipe>Only Right Swipe</paper-swipe>
     <paper-swipe on-tap-underlay='tapHandler'>Tap Event Handler</paper-swipe>
@@ -40,34 +39,19 @@ Example:
       <div content>Fire `tap-underlay` event when the panel is being clicked...</div>
     </paper-swipe>
 
-`reset-swipe` attribute has been added as new feature to tell the user that the swiping panel has to return to its
-origin and it is usually used with `on-edge` event handler to perform the additional task.
-
 There are two ways to disable the swiping on the content panel by using `on-tap-underlay` or `on-click` event handler:
 
 Example:
 
-    <paper-swipe reset-swipe on-edge="resetPanel" on-tap-underlay="disablePanel">
+    <paper-swipe on-edge="resetPanel" on-tap-underlay="disablePanel">
         <div underlay>Click to reset the panel from the edge to its origin...</div>
         <div content>Swipe to remove the panel...</div>
     </paper-swipe>
 
-    <paper-swipe reset-swipe on-edge="resetPanel">
+    <paper-swipe on-edge="resetPanel">
         <div underlay on-click="disablePanel">Click to reset the panel from the edge to its origin...</div>
         <div content>Swipe to remove the panel...</div>
     </paper-swipe>
-
-### Usable Attributes
-The followings are the attributes that can be set in the element:
-
-Name | Type | Default | Description
----------------|---------|-------|-------------------------------------------------------------------------------
-`swipe-left` | Boolean | False | If true, only swiping to the left is allowed. (By default, it can be swiped to any sides.)
-`swipe-right` | Boolean | False | If true, only swiping to the right is allowed. (By default, it can be swiped to any sides.)
-`disable-swipe` | Boolean | False | If true, no swiping is allowed.
-`reset-swipe` | Boolean | False | If true, reset the position of the panel.
-`peek-offset` | Number | 30 | 30 pixels of the screen is shown from the edge of the screen.
-`slide-offet` | Number | 80 | Minimum 80 pixels of dragging will auto-slide the panel to the edge of the screen.
 
 ### Generating Element's Boilerplate
 At the end of the demo, there is a code generator that allows you to play around with to customize and generate boilerplate code of this custom element and really hoping that the section could help you to gain better understanding about how to utilize this element as well as to provide a simple and straightforward picture on which attributes that this element provides can be applied with and work well with one another.
@@ -78,29 +62,46 @@ At the end of the demo, there is a code generator that allows you to play around
 -->
 
 <dom-module id="paper-swipe">
-  <template>
+  <template strip-whitespace>
     <style>
       :host {
-        position: relative;
-        display: block;
-
         -webkit-user-select: none;
         -moz-user-select: none;
         -ms-user-select: none;
         user-select: none;
+
+        display: block;
+        position: relative;
+        box-sizing: border-box;
+        @apply(--paper-swipe);
       }
 
-      #content {
-        will-change: transform;
-        background: #ffffff;
+      *, *:before, *:after {
+        box-sizing: inherit;
       }
 
-      #underlay {
+      div.swipeable-container {
         position: absolute;
+        @apply(--paper-swipe-swipeable-container);
+      }
+      div.swipeable-container,
+      div.swipeable-container > ::content > *{
         width: 100%;
+        height: 100%;
       }
 
-      .transition {
+      div.swipeable-container > ::content [underlay]{
+        position: absolute;
+        @apply(--paper-swipe-underlay);
+      }
+
+      div.swipeable-container > ::content [content] {
+        position: absolute;
+        will-change: transform;
+        @apply(--paper-swipe-content);
+      }
+
+      ::content [content].transition {
         transition: -webkit-transform cubic-bezier(.55,0,.1,1) 0.3s;
         transition: -moz-transform cubic-bezier(.55,0,.1,1) 0.3s;
         transition: -mx-transform cubic-bezier(.55,0,.1,1) 0.3s;
@@ -109,15 +110,13 @@ At the end of the demo, there is a code generator that allows you to play around
       }
     </style>
 
-    <div id="underlay">
-      <content select="[underlay]"></content>
+    <div class="swipeable-container">
+      <content id="underlay" select="[underlay]"></content>
+
+      <content id="content" select="[content]"></content>
     </div>
 
-    <div id="content">
-      <content select="[content]"></content>
-    </div>
   </template>
-
 </dom-module>
 
 <script>
@@ -127,28 +126,10 @@ At the end of the demo, there is a code generator that allows you to play around
 
     var sharedPanel = null;
 
-    function classNames(obj) {
-      var classes = [];
-      for (var key in obj) {
-        if (obj.hasOwnProperty(key) && obj[key]) {
-          classes.push(key);
-        }
-      }
-      return classes.join(' ');
-    }
-
     Polymer({
       is: 'paper-swipe',
 
       properties: {
-        /**
-         * Whether the user is dragging the content interactively
-         */
-        _dragging: {
-          type: Boolean,
-          value: false
-        },
-
         /**
          * If true, swiping is disabled
          */
@@ -156,15 +137,6 @@ At the end of the demo, there is a code generator that allows you to play around
           type: Boolean,
           value: false
         },
-
-        /**
-         * If true, only swiping to the right.
-         */
-        swipeRight: {
-          type: Boolean,
-          value: false
-        },
-
         /**
          * If true, only swiping to the left.
          */
@@ -172,17 +144,43 @@ At the end of the demo, there is a code generator that allows you to play around
           type: Boolean,
           value: false
         },
-
         /**
-         * Whether the browser has support for the transform CSS property.
+         * If true, only swiping to the right.
          */
-        _hasTransform: {
+        swipeRight: {
           type: Boolean,
-          value: function () {
-            return 'transform' in this.style;
-          }
+          value: false
+        },
+        /**
+         * The number of pixels the swipeable content is peeking at from the screen edge
+         * after being swiped to the screen edge.
+         */
+        peekOffset: {
+          type: Number,
+          value: 30
+        },
+        /**
+         * How many pixels needed to trigger auto-slide to the edge.
+         */
+        slideOffset: {
+          type: Number,
+          value: 80
+        },
+        /**
+         * If true, fade out when swiping towards the edges and fade in while swiping away from the edges.
+         */
+        fade: {
+          type: Boolean,
+          value: false
         },
 
+        /**
+         * Whether the user is dragging the content interactively
+         */
+        _dragging: {
+          type: Boolean,
+          value: false
+        },
         /**
          * Whether the transition is enabled.
          */
@@ -190,25 +188,6 @@ At the end of the demo, there is a code generator that allows you to play around
           type: Boolean,
           value: false
         },
-
-        /**
-         * How many pixels on the side of the screen appears.
-         */
-        peekOffset: {
-          type: Number,
-          value: 30,
-          notify: true
-        },
-
-        /**
-         * How many pixels needed to trigger auto-slide to the edge.
-         */
-        slideOffset: {
-          type: Number,
-          value: 80,
-          notify: true
-        },
-
         /**
          * If true, swiping to the left is detected and it is only applied to swiping to either side.
          * Otherwise, use `swipeLeft' or 'swipeRight'.
@@ -216,7 +195,6 @@ At the end of the demo, there is a code generator that allows you to play around
         _slideLeft: {
           type: Boolean
         },
-
         /**
          * Repetitively evaluating delta of the transitions.
          */
@@ -224,7 +202,6 @@ At the end of the demo, there is a code generator that allows you to play around
           type: Number,
           observer: '_transitionDeltaChanged'
         },
-
         /**
          * If true, the `transitionDelta` meets the dragging requirements set by `peekOffset` and `slideOffset`.
          */
@@ -232,7 +209,6 @@ At the end of the demo, there is a code generator that allows you to play around
           type: Boolean,
           value: false
         },
-
         /**
          * If true, draggable panel is now at the edge of the screen.
          */
@@ -240,14 +216,12 @@ At the end of the demo, there is a code generator that allows you to play around
           type: Boolean,
           value: false
         },
-
         /**
          * Current pixel position of the draggable panel.
          */
         _curPos: {
           type: Number
         },
-
         /**
          * If true, the draggable panel has been dragged.
          * It is used to ensure that the panel is dragging.
@@ -257,15 +231,8 @@ At the end of the demo, there is a code generator that allows you to play around
           value: false
         },
 
-        /**
-         * If true, the draggable panel will return to its origin.
-         * It is used when it is a single-use draggable panel.
-         */
-        resetSwipe: {
-          type: Boolean,
-          value: false,
-          notify: true
-        }
+        // Store children object via Polymer's getEffectiveChildren or getDistributedNodes;
+        _content: Object,
       },
 
       ready: function() {
@@ -273,6 +240,14 @@ At the end of the demo, there is a code generator that allows you to play around
         // transitions only after the element is rendered and ready.
         this._transition = true;
         this.setScrollDirection(this._swipeAllowed()? 'y' : 'all');
+      },
+
+      attached: function() {
+        // on child element attached, inherit the height of the content.
+        var _content = Polymer.dom(this.$.content).getDistributedNodes()[0];
+        this.style.height = _content.offsetHeight + 'px';
+        // save effective children object.
+        this.set('_content', _content);
       },
 
       // Element Behaviorset
@@ -294,10 +269,10 @@ At the end of the demo, there is a code generator that allows you to play around
        */
 
       listeners: {
-        track: '_onTrack',
-        down: '_downHandler',
-        up: '_upHandler',
-        tap: '_tapHandler'
+        'track': '_onTrack',
+        'down': '_downHandler',
+        'up': '_upHandler',
+        'tap': '_tapHandler'
       },
 
       _transitionDeltaChanged: function (newValue, oldValue) {
@@ -310,7 +285,8 @@ At the end of the demo, there is a code generator that allows you to play around
            * else return to original position.
            */
           if (this.swipeRight){
-            this._validDelta = this._atEdge? newValue <= -this.slideOffset:newValue >= this.slideOffset;
+            this._validDelta = this._atEdge ? newValue <= -this.slideOffset :
+              newValue >= this.slideOffset;
           }
 
           /**
@@ -321,7 +297,8 @@ At the end of the demo, there is a code generator that allows you to play around
            * else return to original position.
            */
           if (this.swipeLeft) {
-            this._validDelta = this._atEdge?  newValue >= this.slideOffset:newValue <= -this.slideOffset;
+            this._validDelta = this._atEdge ? newValue >= this.slideOffset :
+              newValue <= -this.slideOffset;
           }
 
           /**
@@ -346,17 +323,6 @@ At the end of the demo, there is a code generator that allows you to play around
             }
           }
         }
-      },
-
-      _applyClass: function(transition, dragging, swipeLeft, swipeRight) {
-        this.$.content.className = classNames({
-          'style-scope': 'style-scope',
-          'paper-swipe': 'paper-swipe',
-          dragging: dragging,
-          'swipe-left': swipeLeft,
-          'swipe-right': swipeRight,
-          transition: transition
-        });
       },
 
       _tapHandler: function (event) {
@@ -389,12 +355,8 @@ At the end of the demo, there is a code generator that allows you to play around
           sharedPanel = this;
           this._dragging = true;
           if (this._dragging) {
-            this.width = this.$.content.offsetWidth;
+            this.width = this._content.offsetWidth;
             this._transition = false;
-            if (this.resetSwipe){
-              this._atEdge = false;
-              this._curPos = 0;
-            }
           }
         }
       },
@@ -416,8 +378,6 @@ At the end of the demo, there is a code generator that allows you to play around
 
       _downHandler: function (event) {
         if (!this._dragging && !this.disableSwipe && !sharedPanel) {
-//        if (!this.dragging && !this.disableSwipe && !sharedPanel && this._validDelta) {
-          this.$.content.className = 'style-scope paper-swipe';
           // cancel selection
           event.preventDefault();
           // grab this panel
@@ -430,22 +390,9 @@ At the end of the demo, there is a code generator that allows you to play around
         this._transition = true;
 
         /**
-         *  Newly added check condition for resetSwipe.
-         *  It is to reset [curPos] and [[AtEdge].
-         */
-        if (this.resetSwipe && !this._tracking) {
-          this._atEdge = false;
-          this._scurPos = 0;
-          // release the panel! It is a MUST!!! unless declared more sharedPanel for multi-touch?
-          sharedPanel = null;
-          return;
-        }
-
-        /**
          * Specialty for when [AtEdge] is asserted, hold it back to the edge.
          */
         if (this._swipeAllowed() && this._atEdge && !this._validDelta) {
-          this._applyClass(this._transition, this._dragging, this.swipeLeft, this.swipeRight);
           this._moveDrawer(this._curPos);
           // release the panel
           sharedPanel = null;
@@ -473,8 +420,6 @@ At the end of the demo, there is a code generator that allows you to play around
             offsetLR = this._slideLeft? -slideTo: slideTo;
           }
           deltaLR  = this._validDelta && !this._atEdge? offsetLR: null;
-          // apply transition CSS before animation.
-          this._applyClass(this._transition, this._dragging, this.swipeLeft, this.swipeRight);
 
           this._curPos = this._atEdge? null: deltaLR;
           this._atEdge = !(deltaLR === null);
@@ -504,8 +449,37 @@ At the end of the demo, there is a code generator that allows you to play around
       },
 
       _moveDrawer: function(translateX) {
-        this.transform(this._transformForTranslateX(translateX), this.$.content);
-      }
+        var _content = this._content;
+        // if fade is set, transform with fading opacity.
+        if (this.fade) {
+          var _contentOffsetWidth = _content.offsetWidth;
+          var _opacity = Math.max(0, (_contentOffsetWidth - Math.abs(translateX)) /
+            _contentOffsetWidth);
+          // translateX is null which means that swipeable content is returning to its original
+          // position hence opacity is '' or 1;
+          _content.style.opacity = translateX === null ? '' : _opacity;
+        }
+        // transform swipeable content.
+        this.transform(this._transformForTranslateX(translateX), _content);
+
+        // apply class while transforming the drawer.
+        this.toggleClass('transition', this._transition, _content);
+        this.toggleClass('dragging', this._dragging, _content);
+        this.toggleClass('swipe-left', this.swipeLeft, _content);
+        this.toggleClass('swipe-right', this.swipeRight, _content);
+      },
+
+      // Reset the position of the swipeable content with the attribute `content` from the edge after being dragged.
+      resetPosition: function() {
+        // this.transform(this._transformForTranslateX(null), this._content);
+        this._moveDrawer(null);
+        // reset position of the swipeable content from the edge.
+        this.set('_atEdge', false);
+        this.set('_curPos', 0);
+        // fire event when position is reset.
+        this.fire('position-reset');
+      },
+
     });
   })();
 </script>

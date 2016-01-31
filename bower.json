@@ -1,6 +1,6 @@
 {
   "name": "paper-swipe",
-  "version": "0.4.2",
+  "version": "0.4.3",
   "authors": [
     "motss <wes_ngrongsen@hotmail.com>"
   ],
@@ -25,10 +25,10 @@
     "README.md"
   ],
   "dependencies": {
-    "paper-checkbox": "PolymerElements/paper-checkbox#~1.0.10",
-    "polymer": "Polymer/polymer#^1.0.0"
+    "polymer": "Polymer/polymer#^1.2.3"
   },
   "devDependencies": {
-    "iron-component-page": "PolymerElements/iron-component-page#^1.0.0"
+    "iron-component-page": "PolymerElements/iron-component-page#^1.0.0",
+    "paper-checkbox": "polymerelements/paper-checkbox#^1.1.0"
   }
 }
