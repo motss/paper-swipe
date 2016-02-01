@@ -11,7 +11,7 @@
       :host {
         display: block;
         box-sizing: border-box;
-        height: 900px;
+        height: 100vh;
       }
 
       *, *:before, *:after {
@@ -19,6 +19,7 @@
       }
 
       iron-list {
+        margin-top: 64px;
         @apply(--layout-fit);
       }
       .swipe-item {
@@ -29,12 +30,12 @@
           padding: 12px;
         };
         --paper-swipe-underlay: {
-          padding: 12px;
+          @apply(--layout-horizontal);
+          @apply(--layout-center-center);
         };
       }
       .swipe-avatar {
         border-radius: 50%;
-        /*background-color: #bdbdbd;*/
         height: 40px;
         width: 40px;
         display: inline-block;
@@ -71,11 +72,11 @@
       <template strip-whitespace>
         <paper-swipe class="swipe-item" peek-offset="0" fade on-edge="_onEdge">
           <paper-icon-item content>
-            <div class$="swipe-avatar[[_randomColor(index)]]" item-icon></div>
-            [[index]], [[item.content]]
+            <div class$="swipe-avatar[[_randomColor(item.index)]]" item-icon></div>
+            [[index]], [[item.content]] at [[item.index]]
           </paper-icon-item>
-          <div underlay class$="swipe-underlay[[_randomColor(index)]]">
-            [[item.underlay]]
+          <div underlay class$="swipe-underlay[[_randomColor(item.index)]]">
+            [[index]], [[item.underlay]] at [[item.index]]
           </div>
         </paper-swipe>
       </template>
@@ -92,7 +93,8 @@
             for (var i = 0, j = []; i < 100; i++) {
               j.push({
                 content: 'Lorem ipsum dolor sit amet.',
-                underlay: 'Lorem ipsum.'
+                underlay: 'Lorem ipsum.',
+                index: i
               });
             }
             return j;
@@ -104,18 +106,23 @@
       _randomColor: function() {
         var _colors = ['a', 'b', 'c', 'd', 'e', 'f', 'g', ''];
         var _n = Math.floor(Math.random() * 8);
-        console.log(_n);
         var _sc = ' ' + _colors[_n];
         return _sc;
       },
 
       _onEdge: function(ev) {
-        console.log(ev);
         var _modelItem = ev.model.item;
         var _target = ev.target;
-        this.swipeList.splice(_modelItem, 1);
-        _target.remove();
-        this.$.swipeList.updateSizeForItem(_modelItem);
+        // Remove swiped item from the list array.
+        this.splice('swipeList', ev.model.index, 1);
+        this.async(function() {
+          // iron-list will retain the generated list item at the exact position and reuse the item.
+          // However, iron-list only replaces the content of the list item.
+          // Which means that resetPosition() is required when new content comes in.
+          _target.resetPosition();
+          // Then update the size for the item.
+          this.$.swipeList.updateSizeForItem(ev.model.index);
+        }, 1);
       },
 
     });

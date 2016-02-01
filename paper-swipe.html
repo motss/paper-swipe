@@ -359,10 +359,16 @@ At the end of the demo, there is a code generator that allows you to play around
       _tapHandler: function (event) {
         // when disableSwipe is true, only click event can be triggered!
         this.fire('tap-underlay', {nodeName: 'underlay', target: event});
+        if (sharedPanel) {
+          // release the panel after use.
+          sharedPanel = null;
+        }
       },
 
       _onTrack: function (event) {
         if (sharedPanel && this !== sharedPanel) {
+          // release the panel.
+          sharedPanel = null;
           return;
         }
 
@@ -460,9 +466,9 @@ At the end of the demo, there is a code generator that allows you to play around
           this._validDelta = false;
           this._tracking = false;
           this._moveDrawer(deltaLR);
-          // release the panel
-          sharedPanel = null;
         }
+        // release the panel after use.
+        sharedPanel = null;
       },
 
       _swipeAllowed: function () {
