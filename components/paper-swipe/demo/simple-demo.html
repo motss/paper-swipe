@@ -1,0 +1,358 @@
+<link rel="import" href="../../polymer/polymer.html">
+<link rel="import" href="../paper-swipe.html">
+
+<link rel="import" href="../../paper-styles/demo-pages.html">
+<link rel="import" href="../../paper-ripple/paper-ripple.html">
+<link rel="import" href="../../paper-checkbox/paper-checkbox.html">
+
+<dom-module id="simple-demo">
+  <template strip-whitespace>
+    <style>
+      :host {
+        box-sizing: border-box;
+        display: block;
+        /*font-size: 14p;
+        margin: 0;
+        padding: 24px;
+        background-color: var(--paper-grey-50);
+        @apply(-paper-font-common-base);*/
+      }
+
+      *, *:before, *:after {
+        box-sizing: border-box;
+      }
+
+      .horizontal-section-container {
+        @apply(--layout-horizontal);
+        @apply(--layout-center-justified);
+        @apply(--layout-wrap);
+        @apply(--simple-demo-horizontal-section-container);
+      }
+      .horizontal-section-container > div {
+        margin-left: 24px;
+      }
+
+      .horizontal-section {
+        background-color: #fff;
+        padding: 24px;
+        margin-right: 24px;
+        min-width: 130px;
+        overflow-x: hidden;
+        @apply(--shadow-elevation-2dp);
+      }
+
+      h4 {
+        text-transform: capitalize;
+      }
+
+      paper-checkbox {
+        margin-bottom: 20px;
+        --paper-checkbox-checked-color: #00796B;
+      }
+      paper-checkbox.offset {
+        --paper-checkbox-checked-color: #512DA8;
+      }
+
+      paper-swipe {
+        height: 100px;
+        --paper-swipe-content: {
+          padding: 20px;
+          color: var(--text-primary-color);
+          height: 100px;
+          cursor: pointer;
+          background: var(--paper-blue-700, #1976D2);
+        };
+        --paper-swipe-underlay: {
+          padding: 20px;
+          color: var(--text-primary-color);
+          height: 100px;
+          background: var(--paper-orange-500, #FF9800);
+        };
+      }
+
+      .ev-name {
+        font-style: italic;
+        font-weight: bold;
+      }
+      .stat-flag {
+        text-align: right;
+        @apply(--layout-flex-auto);
+      }
+      .ctrl-div {
+        @apply(--layout);
+      }
+      .swipe-boilerplate {
+        width: 90%;
+        border: 1px solid #cfd8dc;
+        color: #607d8b;
+        display: block;
+        height: 32px;
+        -webkit-flex-shrink: 0;
+        flex-shrink: 0;
+        padding: 10px 4px;
+        margin: 0 13px 12px;
+        -moz-box-sizing: border-box;
+        box-sizing: border-box;
+        border-radius: 2px;
+        font-size: 12px;
+      }
+
+      hr {
+        color: #B6B6B6;
+        margin-bottom: 20px;
+      }
+
+      .optional-note {
+        font-size: 10px;
+        font-style: italic;
+        color: #727272;
+      }
+
+      .required-note {
+        font-size: 12px;
+        font-style: italic;
+      }
+    </style>
+
+    <div class="horizontal-section-container">
+      <div>
+        <h4>disable swipe</h4>
+        <div class="horizontal-section">
+          <div class="ctrl-div">
+            <paper-checkbox checked="{{disableCheck}}">Check to disable swiping</paper-checkbox>
+            <span class="stat-flag">disable-swipe: <span>{{disableCheck}}</span></span>
+          </div>
+          <paper-swipe id="disabled" disable-swipe="{{disableCheck}}">
+            <div id="content" content>
+              <div class="label">Swipe disabled</div>
+              <div>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Assumenda, praesentium.</div>
+            </div>
+          </paper-swipe>
+        </div>
+      </div>
+
+      <div>
+        <h4>left swipe only</h4>
+        <div class="horizontal-section">
+          <div class="ctrl-div">
+            <paper-checkbox checked disabled>Checked to enable only left swiping</paper-checkbox>
+          </div>
+          <paper-swipe id="left" swipe-left>
+            <div underlay>
+              <div>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Maiores, voluptas.</div>
+            </div>
+            <div content>
+              <div class="label">Only Swipe Left is allowed</div>
+              <div>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolore, eaque.</div>
+            </div>
+          </paper-swipe>
+        </div>
+      </div>
+
+      <div>
+        <h4>right swipe only</h4>
+        <div class="horizontal-section">
+          <div class="ctrl-div">
+            <paper-checkbox checked disabled>Checked to enable only right swiping</paper-checkbox>
+          </div>
+          <paper-swipe id="right" swipe-right>
+            <div underlay>
+              <div>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Natus, repellendus?</div>
+            </div>
+            <div content>
+              <div class="label">Only Swipe Right is allowed</div>
+              <div>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Adipisci, dolore?</div>
+            </div>
+          </paper-swipe>
+        </div>
+      </div>
+
+      <div>
+        <h4>either side swiping</h4>
+        <div class="horizontal-section">
+          <div class="ctrl-div">
+            <paper-checkbox checked disabled>By default, can be swiped to either side</paper-checkbox>
+          </div>
+          <paper-swipe id="either">
+            <div underlay>
+              <div>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Iure, temporibus.</div>
+            </div>
+            <div content>
+              <div class="label">Swipe to any side</div>
+              <div>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ullam, vel.</div>
+            </div>
+          </paper-swipe>
+        </div>
+      </div>
+
+      <div>
+        <h4>with tap handler</h4>
+        <div class="horizontal-section">
+          <div class="ctrl-div">
+            <paper-checkbox checked disabled>Left swiping is enabled here!</paper-checkbox>
+          </div>
+          <div class="">
+            <paper-checkbox checked disabled><span class="ev-name">tap-underlay</span> event will be fired here!</paper-checkbox>
+          </div>
+          <paper-swipe id="tap" swipe-left on-tap-underlay="tapAction">
+            <div underlay>
+              <paper-ripple></paper-ripple>
+              <div>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eaque, quae!</div>
+            </div>
+            <div content>
+              <paper-ripple></paper-ripple>
+              <div class="label">Fire tap-underlay event</div>
+              <div>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aut, sunt!</div>
+            </div>
+          </paper-swipe>
+        </div>
+      </div>
+
+      <div>
+        <h4>fire event when content has been dragged to the edge!</h4>
+        <div class="horizontal-section">
+          <div class="ctrl-div">
+            <paper-checkbox checked disabled>Left swiping only!</paper-checkbox>
+          </div>
+          <div class="">
+            <paper-checkbox checked disabled>Swipe to fire <span class="ev-name">edge</span> event!</paper-checkbox>
+          </div>
+          <paper-swipe id="tap" swipe-left on-edge="edgeAction">
+            <div underlay>
+              <paper-ripple></paper-ripple>
+              <div>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ea, ipsa!</div>
+            </div>
+            <div content>
+              <paper-ripple></paper-ripple>
+              <div class="label">Fire 'edge' event</div>
+              <div>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aut, sunt!</div>
+            </div>
+          </paper-swipe>
+        </div>
+      </div>
+
+      <div>
+        <h4>reset swiping position with onClick on underlay!</h4>
+        <div class="horizontal-section">
+          <div class="ctrl-div">
+            <paper-checkbox checked disabled>Swipe left or right...</paper-checkbox>
+          </div>
+          <div>
+            <paper-checkbox checked disabled>Tap on underlay (orange panel) to dismiss swipe!</paper-checkbox>
+          </div>
+          <div>
+            <paper-checkbox checked disabled>This is achieved by using <span class="ev-name">on-click</span> event!</paper-checkbox>
+          </div>
+          <paper-swipe id="tap" peek-offset="-24" on-edge="disableAction">
+            <div underlay on-click="resetAction">
+              <paper-ripple></paper-ripple>
+              <div>Click to reset the position of the panel!</div>
+            </div>
+            <div content>
+              <paper-ripple></paper-ripple>
+              <div class="label">Reset Swipe Position</div>
+              <div>Swipe left or right to remove the panel.</div>
+            </div>
+          </paper-swipe>
+
+
+        </div>
+      </div>
+
+      <div>
+        <h4>reset swiping position with onTapUnderlay event handler!</h4>
+        <div class="horizontal-section">
+          <div class="ctrl-div">
+            <paper-checkbox checked disabled>Swipe left or right...</paper-checkbox>
+          </div>
+          <div>
+            <paper-checkbox checked disabled>Tap on underlay (orange panel) to dismiss swipe!</paper-checkbox>
+          </div>
+          <div>
+            <paper-checkbox checked disabled>This is achieved by using <span class="ev-name">tap-underlay</span> event!</paper-checkbox>
+          </div>
+          <paper-swipe id="tap" peek-offset="-24" on-edge="disableAction" on-tap-underlay="resetAction">
+            <div underlay>
+              <paper-ripple></paper-ripple>
+              <div>Click to reset the position of the panel!</div>
+            </div>
+            <div content>
+              <paper-ripple></paper-ripple>
+              <div class="label">Reset Swipe Position</div>
+              <div>Swipe left or right to remove the panel.</div>
+            </div>
+          </paper-swipe>
+        </div>
+      </div>
+
+      <div>
+        <h4>Fade while swiping towards/ away from the screen edge.</h4>
+        <div class="horizontal-section">
+          <div class="ctrl-div">
+            <paper-checkbox checked disabled>Swipe left or right...</paper-checkbox>
+          </div>
+          <div>
+            <paper-checkbox checked disabled>Swipeable content fades out while swiping towards the screen edge OR fades in while swiping away from the screen edge.</paper-checkbox>
+          </div>
+          <div>
+            <paper-checkbox checked disabled>Tap on underlay (orange panel) to dismiss swipe!</paper-checkbox>
+          </div>
+          <paper-swipe id="tap" fade peek-offset="-24" on-tap-underlay="resetAction">
+            <div underlay>
+              <paper-ripple></paper-ripple>
+              <div>Click to reset the position of the panel!</div>
+            </div>
+            <div content>
+              <paper-ripple></paper-ripple>
+              <div class="label">Reset Swipe Position</div>
+              <div>Swipe left or right to remove the panel.</div>
+            </div>
+          </paper-swipe>
+        </div>
+      </div>
+    </div>
+  </template>
+  <script>
+    Polymer({
+      is: 'simple-demo',
+
+      tapAction: function(ev) {
+        var target = ev.detail.target.target,
+        parentElem;
+        if (target.localName === 'paper-ripple'){
+          parentElem = target.parentElement;
+          if (parentElem.attributes[0].name === 'content'){
+            console.log('Content is clicked');
+          }else {
+            console.log('Underlay is clicked!');
+          }
+        }
+      },
+
+      edgeAction: function(ev) {
+        console.log('Edge!');
+      },
+
+      disableAction: function(ev) {
+        var target = ev.target;
+        while (target.localName !== 'paper-swipe'){
+          target = target.parentElement;
+        }
+        target.setAttribute('disable-swipe', true);
+      },
+
+      resetAction: function(ev) {
+        var target = ev.target;
+        if (ev.type === 'tap-underlay') {
+          target = ev.detail.target.target;
+        }
+        while (target.localName !== 'paper-swipe') {
+          target = target.parentElement;
+        }
+        target.removeAttribute('disable-swipe');
+        target.resetPosition();
+      },
+
+    });
+  </script>
+</dom-module>

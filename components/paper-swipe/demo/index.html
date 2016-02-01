@@ -1,0 +1,102 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+    <title>paper-swipe Demo</title>
+    <script src="../../webcomponentsjs/webcomponents-lite.min.js"></script>
+    <link rel="import" href="simple-demo.html">
+    <link rel="import" href="swipe-list.html">
+    <link rel="import" href="boilerplate-generator.html">
+
+    <link rel="import" href="../../iron-pages/iron-pages.html">
+
+    <link rel="import" href="../../paper-styles/paper-styles.html">
+    <link rel="import" href="../../paper-tabs/paper-tabs.html">
+
+    <link rel="import" href="../../app-layout/app-layout.html">
+
+    <style is="custom-style">
+      body {
+        margin: 0;
+        padding: 0;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+
+        box-sizing: border-box;
+      }
+
+      *, *:before, *:after {
+        box-sizing: inherit;
+      }
+
+      app-toolbar {
+        background-color: #1976D2;
+        color: #fff;
+        @apply(--layout-flex);
+      }
+      paper-tab {
+        text-transform: uppercase;
+      }
+
+      iron-pages > * {
+        padding-top: 8px;
+        padding-bottom: 8px;
+      }
+
+      simple-demo {
+        --simple-demo-horizontal-section-container: {
+          display: block;
+        };
+      }
+    </style>
+  </head>
+  <body>
+    <template is="dom-bind" id="swipe" strip-whitespace>
+      <app-header-layout>
+        <app-header fixed shadow>
+          <app-toolbar>
+            <paper-tabs selected="{{tab}}" bottom-item>
+              <paper-tab>
+                <div class="">
+                  simple
+                  <div class="">
+                    demo
+                  </div>
+                </div>
+              </paper-tab>
+              <paper-tab>
+                <div class="">
+                  swipe
+                  <div class="">
+                    list
+                  </div>
+                </div>
+              </paper-tab>
+              <paper-tab>
+                <div class="">
+                  <div class="">
+                    boilerplate
+                  </div>
+                  generator
+                </div>
+              </paper-tab>
+            </paper-tabs>
+          </app-toolbar>
+        </app-header>
+
+        <iron-pages selected="[[tab]]">
+          <simple-demo></simple-demo>
+          <swipe-list></swipe-list>
+          <boilerplate-generator></boilerplate-generator>
+        </iron-pages>
+      </app-header-layout>
+    </template>
+
+    <script>
+      swipe.tab = 0;
+    </script>
+  </body>
+</html>

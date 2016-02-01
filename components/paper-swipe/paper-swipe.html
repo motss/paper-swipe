@@ -1,0 +1,533 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../iron-resizable-behavior/iron-resizable-behavior.html">
+<!--
+`paper-swipe` provides enables swipe gestures to swipe content to either the left or the right to unveil the underlay
+behind it.
+
+Example:
+
+    <paper-swipe>By default, it can be swiped to either the left or the right.</paper-swipe>
+    <paper-swipe disable-swipe>Swipe Gestures disabled</paper-swipe>
+    <paper-swipe fade>Swipe with fade in/ fade out effect</paper-swipe>
+    <paper-swipe left-swipe>Only Left Swipe</paper-swipe>
+    <paper-swipe right-swipe>Only Right Swipe</paper-swipe>
+    <paper-swipe on-tap-underlay='tapHandler'>Tap Event Handler</paper-swipe>
+    <paper-swipe on-edge='edgeHandler'>Panel is now at the edge of the screen</paper-swipe>
+
+`paper-swipe` allows user to use the custom DOM in the body to create basically any contents and it has two different
+sections which allows the customization by using the `content` and `underlay` attributes:
+
+Example:
+
+    <paper-swipe>
+      <div underlay>Underlay content goes here...</div>
+      <div content>Content of swiping element goes here...</div>
+    </paper-swipe>
+
+## Event handling
+
+`paper-swipe` has been added some features to fire certain events such as `tap-underlay` and `edge` so that user can
+make use of it to perform additional functions as you like:
+
+Example:
+
+    <paper-swipe on-edge="edgeHandler"
+      <div underlay>Underlay content goes here...</div>
+      <div content>Fire `edge` event when the panel is at the edge of the screen...</div>
+    </paper-swipe>
+
+    <paper-swipe on-tap-underlay="tapHandler">
+      <div underlay>Underlay content goes here...</div>
+      <div content>Fire `tap-underlay` event when the panel is being clicked...</div>
+    </paper-swipe>
+
+There are two ways to disable the swiping on the content panel by using `on-tap-underlay` or `on-click` event handler:
+
+Example:
+
+    <paper-swipe on-edge="resetPanel" on-tap-underlay="disablePanel">
+        <div underlay>Click to reset the panel from the edge to its origin...</div>
+        <div content>Swipe to remove the panel...</div>
+    </paper-swipe>
+
+    <paper-swipe on-edge="resetPanel">
+        <div underlay on-click="disablePanel">Click to reset the panel from the edge to its origin...</div>
+        <div content>Swipe to remove the panel...</div>
+    </paper-swipe>
+
+## Styling
+Note, it's important that specifying explicit height to the `paper-swipe` will render both the `content` and `underlay` layers to have the same height. Especially when multiple `paper-swipe` on the same document, explicit height will make all elements look consistent.
+
+    paper-swipe {
+      height: 100px;
+    }
+
+    paper-swipe {
+      --paper-swipe: {
+        height: 100px;
+      };
+    }
+
+The following custom properties and mixins are also available for styling:
+
+Custom mixin | Description | Default
+----------------|-------------|----------
+`--paper-swipe` | `Mixin applied to paper-swipe` | `{}`
+`--paper-swipe-swipeable-container` | `Mixin applied to paper-swipe-swipeable-container` | `{}`
+`--paper-swipe-content` | `Mixin applied to swipeable content` | `{}`
+`--paper-swipe-underlay` | `Mixin applied to underlay beneath the swipeable content` | `{}`
+
+## Generating Element's Boilerplate
+At the end of the demo, there is a code generator that allows you to play around with to customize and generate boilerplate code of this custom element and really hoping that the section could help you to gain better understanding about how to utilize this element as well as to provide a simple and straightforward picture on which attributes that this element provides can be applied with and work well with one another.
+
+@author motss
+@element paper-swipe
+@demo demo/index.html
+-->
+
+<dom-module id="paper-swipe">
+  <template strip-whitespace>
+    <style>
+      :host {
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+
+        display: block;
+        position: relative;
+        box-sizing: border-box;
+        @apply(--paper-swipe);
+      }
+
+      *, *:before, *:after {
+        box-sizing: inherit;
+      }
+
+      div.swipeable-container,
+      div.swipeable-container > ::content > *{
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        box-sizing: border-box;
+      }
+      div.swipeable-container {
+        @apply(--paper-swipe-swipeable-container);
+      }
+
+      div.swipeable-container > ::content > [underlay]{
+        @apply(--paper-swipe-underlay);
+      }
+
+      div.swipeable-container > ::content > [content] {
+        will-change: transform;
+        @apply(--paper-swipe-content);
+      }
+
+      ::content [content].transition {
+        transition: -webkit-transform cubic-bezier(.55,0,.1,1) 0.3s;
+        transition: -moz-transform cubic-bezier(.55,0,.1,1) 0.3s;
+        transition: -mx-transform cubic-bezier(.55,0,.1,1) 0.3s;
+        transition: -o-transform cubic-bezier(.55,0,.1,1) 0.3s;
+        transition: transform cubic-bezier(.55,0,.1,1) 0.3s;
+      }
+    </style>
+
+    <div class="swipeable-container">
+      <content id="underlay" select="[underlay]"></content>
+
+      <content id="content" select="[content]"></content>
+    </div>
+
+  </template>
+</dom-module>
+
+<script>
+  (function () {
+
+    'use strict';
+
+    var sharedPanel = null;
+
+    Polymer({
+      is: 'paper-swipe',
+
+      properties: {
+        /**
+         * If true, swiping is disabled
+         */
+        disableSwipe: {
+          type: Boolean,
+          value: false
+        },
+        /**
+         * If true, only swiping to the left.
+         */
+        swipeLeft: {
+          type: Boolean,
+          value: false
+        },
+        /**
+         * If true, only swiping to the right.
+         */
+        swipeRight: {
+          type: Boolean,
+          value: false
+        },
+        /**
+         * The number of pixels the swipeable content is peeking at from the screen edge
+         * after being swiped to the screen edge.
+         */
+        peekOffset: {
+          type: Number,
+          value: 30
+        },
+        /**
+         * How many pixels needed to trigger auto-slide to the edge.
+         */
+        slideOffset: {
+          type: Number,
+          value: 80
+        },
+        /**
+         * If true, fade out when swiping towards the edges and fade in while swiping away from the edges.
+         */
+        fade: {
+          type: Boolean,
+          value: false
+        },
+
+        /**
+         * Whether the user is dragging the content interactively
+         */
+        _dragging: {
+          type: Boolean,
+          value: false
+        },
+        /**
+         * Whether the transition is enabled.
+         */
+        _transition: {
+          type: Boolean,
+          value: false
+        },
+        /**
+         * If true, swiping to the left is detected and it is only applied to swiping to either side.
+         * Otherwise, use `swipeLeft' or 'swipeRight'.
+         */
+        _slideLeft: {
+          type: Boolean
+        },
+        /**
+         * Repetitively evaluating delta of the transitions.
+         */
+        _transitionDelta: {
+          type: Number,
+          observer: '_transitionDeltaChanged'
+        },
+        /**
+         * If true, the `transitionDelta` meets the dragging requirements set by `peekOffset` and `slideOffset`.
+         */
+        _validDelta: {
+          type: Boolean,
+          value: false
+        },
+        /**
+         * If true, draggable panel is now at the edge of the screen.
+         */
+        _atEdge: {
+          type: Boolean,
+          value: false
+        },
+        /**
+         * Current pixel position of the draggable panel.
+         */
+        _curPos: {
+          type: Number
+        },
+        /**
+         * If true, the draggable panel has been dragged.
+         * It is used to ensure that the panel is dragging.
+         */
+        _tracking: {
+          type: Boolean,
+          value: false
+        },
+
+        // Store children object via Polymer's getEffectiveChildren or getDistributedNodes;
+        _content: Object,
+      },
+
+      behaviors: [
+        Polymer.IronResizableBehavior
+      ],
+
+      ready: function() {
+        // Avoid transition at the beginning e.g. page loads and enable
+        // transitions only after the element is rendered and ready.
+        this._transition = true;
+        this.setScrollDirection(this._swipeAllowed()? 'y' : 'all');
+      },
+
+      attached: function() {
+        // on child element attached, inherit the height of the content.
+        var _content = Polymer.dom(this.$.content).getDistributedNodes()[0];
+        // this.async(function() {
+        //   this.style.height = _content.offsetHeight + 'px';
+        // }, 1);
+        // save effective children object.
+        this.set('_content', _content);
+      },
+
+      // Element Behaviorset
+
+      /**
+       * The `edge` event is fired whenever `_atEdge` is set to true which
+       * indicates that the current position of the draggable panel is now at
+       * the edge of the viewport.
+       *
+       * @event edge
+       * @detail {{message: String, target: Object::Event}}
+       */
+
+      /**
+       * The 'tap-underlay' event is fired whenever '_tapHandler' is called.
+       *
+       * @event tap-underlay
+       * @detail {{nodeName: Object, target: Object::Event}}
+       */
+
+      listeners: {
+        'track': '_onTrack',
+        'down': '_downHandler',
+        'up': '_upHandler',
+        'tap': '_tapHandler',
+        'iron-resize': '_onIronResize'
+      },
+
+      _transitionDeltaChanged: function (newValue, oldValue) {
+        if (this._swipeAllowed()){
+          /**
+           * To trigger auto-swipe to the right:-
+           * - newValue > oldValue
+           * - newValue >= slideOffset
+           *
+           * else return to original position.
+           */
+          if (this.swipeRight){
+            this._validDelta = this._atEdge ? newValue <= -this.slideOffset :
+              newValue >= this.slideOffset;
+          }
+
+          /**
+           * To trigger auto-swipe to the left:-
+           * - newValue < oldValue
+           * - newValue <= -slideOffset
+           *
+           * else return to original position.
+           */
+          if (this.swipeLeft) {
+            this._validDelta = this._atEdge ? newValue >= this.slideOffset :
+              newValue <= -this.slideOffset;
+          }
+
+          /**
+           * To trigger auto-swipe to either side,
+           * it basically works the same as [swipeLeft] and
+           * [swipeRight], just that it needs one more
+           * parameter to detect if it's dragging to the left.
+           *
+           * Assert [slideLeft] if the left-dragging is
+           * detected.
+           *
+           * else return to original position.
+           */
+          if (!this.swipeLeft && !this.swipeRight) {
+            if (newValue > oldValue) {
+              this._slideLeft = false;
+              this._validDelta = newValue >= this.slideOffset;
+            }
+            if (newValue < oldValue) {
+              this._slideLeft = true;
+              this._validDelta = newValue <= -this.slideOffset;
+            }
+          }
+        }
+      },
+
+      _tapHandler: function (event) {
+        // when disableSwipe is true, only click event can be triggered!
+        this.fire('tap-underlay', {nodeName: 'underlay', target: event});
+        if (sharedPanel) {
+          // release the panel after use.
+          sharedPanel = null;
+        }
+      },
+
+      _onTrack: function (event) {
+        if (sharedPanel && this !== sharedPanel) {
+          // release the panel.
+          sharedPanel = null;
+          return;
+        }
+
+        if (this._swipeAllowed()){
+          switch (event.detail.state) {
+            case 'start':
+              this._trackStart(event);
+              break;
+            case 'track':
+              this._trackX(event);
+              break;
+            case 'end':
+              this._trackEnd(event);
+              break;
+          }
+        }
+      },
+
+      _trackStart: function(event) {
+        if (this._swipeAllowed()) {
+          sharedPanel = this;
+          this._dragging = true;
+          if (this._dragging) {
+            this.width = this._content.offsetWidth;
+            this._transition = false;
+          }
+        }
+      },
+
+      _trackX: function(event) {
+        if (this._dragging) {
+          var dx = event.detail.dx,
+            dragDx;
+          this._transitionDelta = dx;
+          dragDx = this._atEdge? this._curPos + dx: dx;
+          this._tracking = true;
+          this._moveDrawer(dragDx);
+        }
+      },
+
+      _trackEnd: function(event) {
+        //reserve for future use.
+      },
+
+      _downHandler: function (event) {
+        if (!this._dragging && !this.disableSwipe && !sharedPanel) {
+          // cancel selection
+          event.preventDefault();
+          // grab this panel
+          sharedPanel = this;
+        }
+      },
+
+      _upHandler: function (event) {
+        this._dragging = false;
+        this._transition = true;
+
+        /**
+         * Specialty for when [AtEdge] is asserted, hold it back to the edge.
+         */
+        if (this._swipeAllowed() && this._atEdge && !this._validDelta) {
+          this._moveDrawer(this._curPos);
+          // release the panel
+          sharedPanel = null;
+          return;
+        }
+
+        /**
+         * tracking must be asserted.
+         */
+        if (this._swipeAllowed() && this._tracking){
+          /**
+           *  to swipe to the leftmost edge:-
+           *  - slide until [this.peekOffset] - [this.width].
+           *  - validDelta = true
+           *  - AtEdge = false
+           *  - store current position after swiping to leftmost edge, [curPos]
+           *  - animate the dragging by [_moveDrawer(pixel_to_animate)]
+           *
+           *  else vice versa for swiping to rightmsot edge and/ or either side.
+           */
+          var slideTo = this.width - this.peekOffset,
+            offsetLR = this.swipeRight? slideTo: -slideTo,
+            deltaLR;
+          if (!this.swipeLeft) {
+            offsetLR = this._slideLeft? -slideTo: slideTo;
+          }
+          deltaLR  = this._validDelta && !this._atEdge? offsetLR: null;
+
+          this._curPos = this._atEdge? null: deltaLR;
+          this._atEdge = !(deltaLR === null);
+          if (this._atEdge) {
+            this.fire('edge', {message: 'panel-on-edge', target: event});
+          }
+          this._validDelta = false;
+          this._tracking = false;
+          this._moveDrawer(deltaLR);
+        }
+        // release the panel after use.
+        sharedPanel = null;
+      },
+
+      _swipeAllowed: function () {
+        return !this.disableSwipe;
+      },
+
+      _transformForTranslateX: function(translateX) {
+        if (translateX === null) {
+          /**
+           * return 0 works smoother on mobile than returning '';
+           */
+          return 'translate3d(0, 0, 0)';
+        }
+        return 'translate3d(' + translateX + 'px, 0, 0)';
+      },
+
+      _moveDrawer: function(translateX) {
+        var _content = this._content;
+        // if fade is set, transform with fading opacity.
+        if (this.fade) {
+          var _contentOffsetWidth = _content.offsetWidth;
+          var _opacity = Math.max(0, (_contentOffsetWidth - Math.abs(translateX)) /
+            _contentOffsetWidth);
+          // translateX is null which means that swipeable content is returning to its original
+          // position hence opacity is '' or 1;
+          _content.style.opacity = translateX === null ? '' : _opacity;
+        }
+        // transform swipeable content.
+        this.transform(this._transformForTranslateX(translateX), _content);
+
+        // apply class while transforming the drawer.
+        this.toggleClass('transition', this._transition, _content);
+        this.toggleClass('dragging', this._dragging, _content);
+        this.toggleClass('swipe-left', this.swipeLeft, _content);
+        this.toggleClass('swipe-right', this.swipeRight, _content);
+      },
+
+      // Reset the position of the swipeable content with the attribute `content` from the edge after being dragged.
+      resetPosition: function() {
+        // this.transform(this._transformForTranslateX(null), this._content);
+        this._moveDrawer(null);
+        // reset position of the swipeable content from the edge.
+        this.set('_atEdge', false);
+        this.set('_curPos', 0);
+        // fire event when position is reset.
+        this.fire('position-reset');
+      },
+
+      _onIronResize: function() {
+        // console.log('paper-swipe-resize');
+        // var _content = this._content;
+        // if (_content && this._toUpdateHeight) {
+        //   this.async(function() {
+        //     console.log(this._content.offsetHeight);
+        //     this.style.height = _content.offsetHeight + 'px';
+        //   }, 1);
+        // }
+      },
+
+    });
+  })();
+</script>

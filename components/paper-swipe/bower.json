@@ -1,0 +1,39 @@
+{
+  "name": "paper-swipe",
+  "version": "1.0.2",
+  "authors": [
+    "motss <wes_ngrongsen@hotmail.com>"
+  ],
+  "description": "Custom Element with swiping feature named paper-swipe",
+  "keywords": [
+    "web-component",
+    "web-components",
+    "polymer",
+    "seed",
+    "paper-swipe",
+    "swipe",
+    "paper",
+    "motss"
+  ],
+  "main": "paper-swipe.html",
+  "license": "MIT",
+  "homepage": "https://github.com/motss/paper-swipe",
+  "ignore": [
+    "/.*",
+    "/test/",
+    "LICENSE",
+    "README.md"
+  ],
+  "dependencies": {
+    "polymer": "Polymer/polymer#^1.2.3"
+  },
+  "devDependencies": {
+    "iron-component-page": "PolymerElements/iron-component-page#^1.0.0",
+    "paper-checkbox": "polymerelements/paper-checkbox#^1.1.0",
+    "paper-tabs": "polymerelements/paper-tabs#^1.3.3",
+    "app-layout": "polymerlabs/app-layout#^0.0.6",
+    "iron-pages": "polymerelements/iron-pages#^1.0.5",
+    "iron-list": "polymerelements/iron-list#^1.2.0",
+    "paper-item": "PolymerElements/paper-item#^1.1.3"
+  }
+}

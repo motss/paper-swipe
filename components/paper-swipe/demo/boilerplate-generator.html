@@ -1,0 +1,300 @@
+<link rel="import" href="../../polymer/polymer.html">
+
+<dom-module id="boilerplate-generator">
+  <template strip-whitespace>
+  <style>
+    :host {
+      box-sizing: border-box;
+      display: block;
+    }
+
+    *, *:before, *:after {
+      box-sizing: border-box;
+    }
+
+    .horizontal-section-container {
+      @apply(--layout-horizontal);
+      @apply(--layout-center-justified);
+      @apply(--layout-wrap);
+      @apply(--simple-demo-horizontal-section-container);
+    }
+    .horizontal-section-container > div {
+      margin-left: 24px;
+    }
+
+    .horizontal-section {
+      background-color: #fff;
+      padding: 24px;
+      margin-right: 24px;
+      min-width: 130px;
+      overflow-x: hidden;
+      @apply(--shadow-elevation-2dp);
+    }
+
+    h4 {
+      text-transform: capitalize;
+    }
+
+    paper-checkbox {
+      margin-bottom: 20px;
+      --paper-checkbox-checked-color: #00796B;
+    }
+    paper-checkbox.offset {
+      --paper-checkbox-checked-color: #512DA8;
+    }
+
+    paper-swipe {
+      --paper-swipe-content: {
+        padding: 20px;
+        color: var(--text-primary-color);
+        height: 100px;
+        cursor: pointer;
+        background: var(--paper-blue-700, #1976D2);
+      };
+      --paper-swipe-underlay: {
+        padding: 20px;
+        color: var(--text-primary-color);
+        height: 100px;
+        background: var(--paper-orange-500, #FF9800);
+      };
+    }
+
+    .ev-name {
+      font-style: italic;
+      font-weight: bold;
+    }
+    .stat-flag {
+      text-align: right;
+      @apply(--layout-flex-auto);
+    }
+    .ctrl-div {
+      @apply(--layout);
+    }
+    .swipe-boilerplate {
+      width: 90%;
+      border: 1px solid #cfd8dc;
+      color: #607d8b;
+      display: block;
+      height: 32px;
+      -webkit-flex-shrink: 0;
+      flex-shrink: 0;
+      padding: 10px 4px;
+      margin: 0 13px 12px;
+      -moz-box-sizing: border-box;
+      box-sizing: border-box;
+      border-radius: 2px;
+      font-size: 12px;
+    }
+
+    hr {
+      color: #B6B6B6;
+      margin-bottom: 20px;
+    }
+
+    .optional-note {
+      font-size: 10px;
+      font-style: italic;
+      color: #727272;
+    }
+
+    .required-note {
+      font-size: 12px;
+      font-style: italic;
+    }
+  </style>
+
+  <div class="horizontal-section-container">
+    <div>
+      <h4>Element's Boilerplate</h4>
+      <section class="horizontal-section code-section">
+        <div  on-iron-change="genCode">
+          <div>
+            <paper-checkbox data-toggle="disable" checked="{{takeDisable}}" disabled="{{nodisable}}">
+              <span>disableSwipe</span>
+            </paper-checkbox>
+          </div>
+          <div>
+            <paper-checkbox data-toggle="fade" checked="{{takeFade}}" disabled="{{nofade}}">
+              <span>fade<span class="optional-note">&emsp;//Note: Set true if fade in/ fade out while swiping towards/ away from the screen edge.</span></span>
+            </paper-checkbox>
+          </div>
+          <div>
+            <paper-checkbox data-toggle="left" checked="{{takeLeft}}" disabled="{{noleft}}">
+              <span>swipeLeft</span>
+            </paper-checkbox>
+          </div>
+          <div>
+            <paper-checkbox data-toggle="right" checked="{{takeRight}}" disabled="{{noright}}">
+              <span>swipeRight</span>
+            </paper-checkbox>
+          </div>
+          <div>
+            <paper-checkbox data-toggle="edge" checked="{{takeEdge}}" disabled="{{noedge}}">
+              <span>onEdge</span>
+            </paper-checkbox>
+          </div>
+          <div>
+            <paper-checkbox data-toggle="underlay" checked="{{takeUnderlay}}" disabled="{{nounderlay}}">
+              <span>onTapUnderlay</span>
+            </paper-checkbox>
+          </div>
+          <hr>
+          <div>
+            <paper-checkbox class="offset" data-toggle="peek" checked="{{takePeek}}" disabled="{{nopeek}}">
+              <span>peekOffset<span class="optional-note">&emsp;//Optional: Number of pixels needed to slide in order to 'peek' the underlay's content.</span></span>
+            </paper-checkbox>
+          </div>
+          <div>
+            <paper-checkbox class="offset" data-toggle="slide" checked="{{takeSlide}}" disabled="{{noslide}}">
+              <span>slideOffset<span class="optional-note">&emsp;//Optional: Number of pixels needed to slide to let the slider moves to the edge itself.</span></span>
+            </paper-checkbox>
+          </div>
+        </div>
+        <hr>
+        <div>
+          <paper-checkbox class="required" checked disabled>
+            <span>content<span class="required-note">&emsp;//Required: Add the attribute on an element as the sliding panel. For more info, please refer to the doc.</span></span>
+          </paper-checkbox>
+        </div>
+        <div>
+          <paper-checkbox class="required" checked disabled>
+            <span>underlay<span class="required-note">&emsp;//Optional: Add the attribute on another element as the layer situated beneath the sliding panel. For more info, please refer to the doc.</span></span>
+          </paper-checkbox>
+        </div>
+        <input class="swipe-boilerplate" value="{{swipeCode}}" title="paper-swipe-boilerplate" readonly onclick="this.select();">
+      </section>
+    </div>
+  </div>
+  </template>
+  <script>
+    var swipeCount = 0;
+
+    Polymer({
+      is: 'boilerplate-generator',
+
+      properties: {
+        swipeCode: {
+          type: String,
+          value: '<paper-swipe></paper-swipe>'
+        },
+        nodisable: {
+          type: Boolean,
+          value: false
+        },
+        nopeek: {
+          type: Boolean,
+          value: false
+        },
+        nofade: {
+          type: Boolean,
+          value: false
+        },
+        noslide: {
+          type: Boolean,
+          value: false
+        },
+        noleft: {
+          type: Boolean,
+          value: false
+        },
+        noright: {
+          type: Boolean,
+          value: false
+        },
+        noedge: {
+          type: Boolean,
+          value: false
+        },
+        nounderlay: {
+          type: Boolean,
+          value: false
+        },
+
+      },
+
+      genCode: function(ev) {
+        var target = ev.target;
+        if (target.localName !== 'paper-checkbox' &&  !target.hasAttribute('data-toggle')) {
+          return;
+        }
+
+        var targeting = target.getAttribute('data-toggle');
+        switch (targeting) {
+          case 'disable':
+            if (this.swipeCode) {
+              this.noleft = this.noright = this.nopeek = this.nofade = this.noslide = this.noedge = this.nounderlay = target.checked;
+              this.swipeCode = this._modCode(target.checked, this.swipeCode, ' disable-swipe', true);
+            }
+            break;
+          case 'peek':
+            if (this.swipeCode) {
+              this.nodisable = this._setDisable(target.checked);
+              this.swipeCode = this._modCode(target.checked, this.swipeCode, ' peek-offset=""');
+            }
+            break;
+          case 'fade':
+            if (this.swipeCode) {
+              this.nodisable = this._setDisable(target.checked);
+              this.swipeCode = this._modCode(target.checked, this.swipeCode, ' fade');
+            }
+            break;
+          case 'slide':
+            if (this.swipeCode) {
+              this.nodisable = this._setDisable(target.checked);
+              this.swipeCode = this._modCode(target.checked, this.swipeCode, ' slide-offset=""');
+            }
+            break;
+          case 'left':
+            if (this.swipeCode) {
+              this.nodisable = this._setDisable(target.checked);
+              this.noright = target.checked;
+              this.swipeCode = this._modCode(target.checked, this.swipeCode, ' swipe-left')
+            }
+            break;
+          case 'right':
+            if (this.swipeCode) {
+              this.nodisable = this._setDisable(target.checked);
+              this.noleft = target.checked;
+              this.swipeCode = this._modCode(target.checked, this.swipeCode, ' swipe-right');
+            }
+            break;
+          case 'edge':
+            if (this.swipeCode) {
+              this.nodisable = this._setDisable(target.checked);
+              this.swipeCode = this._modCode(target.checked, this.swipeCode, ' on-edge=""');
+            }
+            break;
+          case 'underlay':
+            if (this.swipeCode) {
+              this.nodisable = this._setDisable(target.checked);
+              this.swipeCode = this._modCode(target.checked, this.swipeCode, ' on-tap-underlay=""');
+            }
+            break;
+          default:
+            console.log('Error... at: ' + targeting);
+        }
+      },
+
+      _setDisable: function(check){
+        check? swipeCount++: swipeCount--;
+        return swipeCount !== 0;
+      },
+
+      _modCode: function(checked, code, ins, rst) {
+        var _modStr = '<paper-swipe disable-swipe></paper-swipe>', insertPt = 0, firstChunk = '', lastChunk = '';
+        if (checked && code !== undefined && ins !== undefined) {
+          if (!rst && rst === undefined) {
+            insertPt = code.indexOf('>');
+            firstChunk = code.substring(0, insertPt);
+            lastChunk = code.substring(insertPt);
+            _modStr = firstChunk.concat(ins, lastChunk);
+          }
+        }else {
+          _modStr = code.replace(ins, '');
+        }
+        return _modStr;
+      },
+
+    });
+  </script>
+</dom-module>
