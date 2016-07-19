@@ -10,7 +10,9 @@ Example:
     <paper-swipe disable-swipe>Swipe Gestures disabled</paper-swipe>
     <paper-swipe fade>Swipe with fade in/ fade out effect</paper-swipe>
     <paper-swipe left-swipe>Only Left Swipe</paper-swipe>
+    <paper-swipe left-swipe single-direction>Only Left Swipe, with single direction</paper-swipe>
     <paper-swipe right-swipe>Only Right Swipe</paper-swipe>
+    <paper-swipe right-swipe single-direction>Only Right Swipe, with single direction</paper-swipe>
     <paper-swipe on-tap-underlay='tapHandler'>Tap Event Handler</paper-swipe>
     <paper-swipe on-edge='edgeHandler'>Panel is now at the edge of the screen</paper-swipe>
 
@@ -162,6 +164,14 @@ At the end of the demo, there is a code generator that allows you to play around
           value: false
         },
         /**
+         * If true, swiping in the opposite direction is disabled.
+         * Ignored if no direction specified, i.e. neither swipeLeft nor swipeRight are true.
+         */
+        singleDirection: {
+          type: Boolean,
+          value: false
+        },
+        /**
          * If true, only swiping to the left.
          */
         swipeLeft: {
@@ -307,7 +317,7 @@ At the end of the demo, there is a code generator that allows you to play around
       },
 
       _transitionDeltaChanged: function (newValue, oldValue) {
-        if (this._swipeAllowed()){
+        if (this._swipeAllowed()) {
           /**
            * To trigger auto-swipe to the right:-
            * - newValue > oldValue
@@ -315,7 +325,7 @@ At the end of the demo, there is a code generator that allows you to play around
            *
            * else return to original position.
            */
-          if (this.swipeRight){
+          if (this.swipeRight) {
             this._validDelta = this._atEdge ? newValue <= -this.slideOffset :
               newValue >= this.slideOffset;
           }
@@ -365,6 +375,25 @@ At the end of the demo, there is a code generator that allows you to play around
         }
       },
 
+      _directionAllowed: function (event) {
+        if (!this.singleDirection) {
+          return true;
+        }
+
+        var towardsLeft = event.detail.dx < 0;
+        var towardsRight = event.detail.dx > 0;
+
+        if (this.swipeLeft) {
+          return towardsLeft || (towardsRight && this._atEdge);
+        }
+
+        if (this.swipeRight) {
+          return towardsRight || (towardsLeft && this._atEdge);
+        }
+
+        return true;
+      },
+
       _onTrack: function (event) {
         if (sharedPanel && this !== sharedPanel) {
           // release the panel.
@@ -372,7 +401,7 @@ At the end of the demo, there is a code generator that allows you to play around
           return;
         }
 
-        if (this._swipeAllowed()){
+        if (this._swipeAllowed() && this._directionAllowed(event)) {
           switch (event.detail.state) {
             case 'start':
               this._trackStart(event);
@@ -388,13 +417,11 @@ At the end of the demo, there is a code generator that allows you to play around
       },
 
       _trackStart: function(event) {
-        if (this._swipeAllowed()) {
-          sharedPanel = this;
-          this._dragging = true;
-          if (this._dragging) {
-            this.width = this._content.offsetWidth;
-            this._transition = false;
-          }
+        sharedPanel = this;
+        this._dragging = true;
+        if (this._dragging) {
+          this.width = this._content.offsetWidth;
+          this._transition = false;
         }
       },
 
@@ -403,7 +430,7 @@ At the end of the demo, there is a code generator that allows you to play around
           var dx = event.detail.dx,
             dragDx;
           this._transitionDelta = dx;
-          dragDx = this._atEdge? this._curPos + dx: dx;
+          dragDx = this._atEdge? this._curPos + dx : dx;
           this._tracking = true;
           this._moveDrawer(dragDx);
         }
@@ -439,7 +466,7 @@ At the end of the demo, there is a code generator that allows you to play around
         /**
          * tracking must be asserted.
          */
-        if (this._swipeAllowed() && this._tracking){
+        if (this._swipeAllowed() && this._tracking) {
           /**
            *  to swipe to the leftmost edge:-
            *  - slide until [this.peekOffset] - [this.width].
