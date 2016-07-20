@@ -167,7 +167,7 @@ At the end of the demo, there is a code generator that allows you to play around
          * If true, swiping in the opposite direction is disabled.
          * Ignored if no direction specified, i.e. neither swipeLeft nor swipeRight are true.
          */
-        singleDirection: {
+        noOppositeSwipe: {
           type: Boolean,
           value: false
         },
@@ -362,7 +362,7 @@ At the end of the demo, there is a code generator that allows you to play around
       },
 
       _directionAllowed: function (event) {
-        if (!this.singleDirection || this.swipeLeft === this.swipeRight) {
+        if (!this.noOppositeSwipe || this.swipeLeft === this.swipeRight) {
           return true;
         }
 
@@ -395,9 +395,6 @@ At the end of the demo, there is a code generator that allows you to play around
           sharedPanel = null;
           return;
         }
-
-        // this._content.contains(event.detail.hover())
-        // Polymer.dom(this._content).deepContains(event.detail.hover())
 
         if (this._swipeAllowed() && this._directionAllowed(event)) {
           switch (event.detail.state) {
