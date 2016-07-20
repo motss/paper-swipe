@@ -1,5 +1,4 @@
 <link rel="import" href="../polymer/polymer.html">
-<!-- <link rel="import" href="../iron-resizable-behavior/iron-resizable-behavior.html"> -->
 
 <!--
 `paper-swipe` provides enables swipe gestures to swipe content to either the left or the right to unveil the underlay
@@ -270,10 +269,6 @@ At the end of the demo, there is a code generator that allows you to play around
         _content: Object,
       },
 
-      // behaviors: [
-      //   Polymer.IronResizableBehavior
-      // ],
-
       ready: function() {
         // Avoid transition at the beginning
         // E.g. page loads and enable transitions only after the element is rendered and ready
@@ -314,7 +309,6 @@ At the end of the demo, there is a code generator that allows you to play around
         'down': '_downHandler',
         'up': '_upHandler',
         'tap': '_tapHandler'
-        // 'iron-resize': '_onIronResize'
       },
 
       _transitionDeltaChanged: function (newValue, oldValue) {
@@ -547,17 +541,6 @@ At the end of the demo, there is a code generator that allows you to play around
         // fire event when position is reset.
         this.fire('position-reset');
       }
-
-      // _onIronResize: function() {
-        // console.log('paper-swipe-resize');
-        // var _content = this._content;
-        // if (_content && this._toUpdateHeight) {
-        //   this.async(function() {
-        //     console.log(this._content.offsetHeight);
-        //     this.style.height = _content.offsetHeight + 'px';
-        //   }, 1);
-        // }
-      // },
 
     });
   })();
