@@ -1,5 +1,6 @@
 <link rel="import" href="../polymer/polymer.html">
-<link rel="import" href="../iron-resizable-behavior/iron-resizable-behavior.html">
+<!-- <link rel="import" href="../iron-resizable-behavior/iron-resizable-behavior.html"> -->
+
 <!--
 `paper-swipe` provides enables swipe gestures to swipe content to either the left or the right to unveil the underlay
 behind it.
@@ -128,11 +129,11 @@ At the end of the demo, there is a code generator that allows you to play around
       }
 
       ::content [content].transition {
-        transition: -webkit-transform cubic-bezier(.55,0,.1,1) 0.3s;
-        transition: -moz-transform cubic-bezier(.55,0,.1,1) 0.3s;
-        transition: -mx-transform cubic-bezier(.55,0,.1,1) 0.3s;
-        transition: -o-transform cubic-bezier(.55,0,.1,1) 0.3s;
-        transition: transform cubic-bezier(.55,0,.1,1) 0.3s;
+        transition: -webkit-transform cubic-bezier(.55, 0, .1, 1) 0.3s;
+        transition: -moz-transform cubic-bezier(.55, 0, .1, 1) 0.3s;
+        transition: -mx-transform cubic-bezier(.55, 0, .1, 1) 0.3s;
+        transition: -o-transform cubic-bezier(.55, 0, .1, 1) 0.3s;
+        transition: transform cubic-bezier(.55, 0, .1, 1) 0.3s;
       }
     </style>
 
@@ -207,7 +208,6 @@ At the end of the demo, there is a code generator that allows you to play around
           type: Boolean,
           value: false
         },
-
         /**
          * Whether the user is dragging the content interactively
          */
@@ -264,8 +264,9 @@ At the end of the demo, there is a code generator that allows you to play around
           type: Boolean,
           value: false
         },
-
-        // Store children object via Polymer's getEffectiveChildren or getDistributedNodes;
+        /**
+         * Store children object via Polymer's getDistributedNodes
+         */
         _content: Object,
       },
 
@@ -274,10 +275,10 @@ At the end of the demo, there is a code generator that allows you to play around
       ],
 
       ready: function() {
-        // Avoid transition at the beginning e.g. page loads and enable
-        // transitions only after the element is rendered and ready.
+        // Avoid transition at the beginning
+        // E.g. page loads and enable transitions only after the element is rendered and ready
         this._transition = true;
-        this.setScrollDirection(this._swipeAllowed()? 'y' : 'all');
+        this.setScrollDirection(this._swipeAllowed() ? 'y' : 'all');
       },
 
       attached: function() {
@@ -312,14 +313,14 @@ At the end of the demo, there is a code generator that allows you to play around
         'track': '_onTrack',
         'down': '_downHandler',
         'up': '_upHandler',
-        'tap': '_tapHandler',
-        'iron-resize': '_onIronResize'
+        'tap': '_tapHandler'
+        // 'iron-resize': '_onIronResize'
       },
 
       _transitionDeltaChanged: function (newValue, oldValue) {
         if (this._swipeAllowed()) {
           /**
-           * To trigger auto-swipe to the right:-
+           * To trigger auto-swipe to the right:
            * - newValue > oldValue
            * - newValue >= slideOffset
            *
@@ -331,7 +332,7 @@ At the end of the demo, there is a code generator that allows you to play around
           }
 
           /**
-           * To trigger auto-swipe to the left:-
+           * To trigger auto-swipe to the left:
            * - newValue < oldValue
            * - newValue <= -slideOffset
            *
@@ -366,15 +367,6 @@ At the end of the demo, there is a code generator that allows you to play around
         }
       },
 
-      _tapHandler: function (event) {
-        // when disableSwipe is true, only click event can be triggered!
-        this.fire('tap-underlay', {nodeName: 'underlay', target: event});
-        if (sharedPanel) {
-          // release the panel after use.
-          sharedPanel = null;
-        }
-      },
-
       _directionAllowed: function (event) {
         if (!this.singleDirection) {
           return true;
@@ -382,16 +374,27 @@ At the end of the demo, there is a code generator that allows you to play around
 
         var towardsLeft = event.detail.dx < 0;
         var towardsRight = event.detail.dx > 0;
+        var beforeLeftEdge = this._curPos ? event.detail.dx > -this._curPos : true;
+        var beforeRightEdge = this._curPos ? event.detail.dx < -this._curPos : true;
 
         if (this.swipeLeft) {
-          return towardsLeft || (towardsRight && this._atEdge);
+          return towardsLeft || (towardsRight && this._atEdge && beforeRightEdge);
         }
 
         if (this.swipeRight) {
-          return towardsRight || (towardsLeft && this._atEdge);
+          return towardsRight || (towardsLeft && this._atEdge && beforeLeftEdge);
         }
 
         return true;
+      },
+
+      _tapHandler: function (event) {
+        // when disableSwipe is true, only click event can be triggered!
+        this.fire('tap-underlay', { nodeName: 'underlay', target: event });
+        if (sharedPanel) {
+          // release the panel after use.
+          sharedPanel = null;
+        }
       },
 
       _onTrack: function (event) {
@@ -430,14 +433,14 @@ At the end of the demo, there is a code generator that allows you to play around
           var dx = event.detail.dx,
             dragDx;
           this._transitionDelta = dx;
-          dragDx = this._atEdge? this._curPos + dx : dx;
+          dragDx = this._atEdge ? this._curPos + dx : dx;
           this._tracking = true;
           this._moveDrawer(dragDx);
         }
       },
 
       _trackEnd: function(event) {
-        //reserve for future use.
+        // reserve for future use.
       },
 
       _downHandler: function (event) {
@@ -478,17 +481,17 @@ At the end of the demo, there is a code generator that allows you to play around
            *  else vice versa for swiping to rightmsot edge and/ or either side.
            */
           var slideTo = this.width - this.peekOffset,
-            offsetLR = this.swipeRight? slideTo: -slideTo,
+            offsetLR = this.swipeRight ? slideTo : -slideTo,
             deltaLR;
           if (!this.swipeLeft) {
-            offsetLR = this._slideLeft? -slideTo: slideTo;
+            offsetLR = this._slideLeft ? -slideTo : slideTo;
           }
-          deltaLR  = this._validDelta && !this._atEdge? offsetLR: null;
+          deltaLR = this._validDelta && !this._atEdge ? offsetLR : null;
 
-          this._curPos = this._atEdge? null: deltaLR;
+          this._curPos = this._atEdge ? null : deltaLR;
           this._atEdge = !(deltaLR === null);
           if (this._atEdge) {
-            this.fire('edge', {message: 'panel-on-edge', target: event});
+            this.fire('edge', { message: 'panel-on-edge', target: event });
           }
           this._validDelta = false;
           this._tracking = false;
@@ -542,9 +545,9 @@ At the end of the demo, there is a code generator that allows you to play around
         this.set('_curPos', 0);
         // fire event when position is reset.
         this.fire('position-reset');
-      },
+      }
 
-      _onIronResize: function() {
+      // _onIronResize: function() {
         // console.log('paper-swipe-resize');
         // var _content = this._content;
         // if (_content && this._toUpdateHeight) {
@@ -553,7 +556,7 @@ At the end of the demo, there is a code generator that allows you to play around
         //     this.style.height = _content.offsetHeight + 'px';
         //   }, 1);
         // }
-      },
+      // },
 
     });
   })();
