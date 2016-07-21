@@ -264,9 +264,14 @@ At the end of the demo, there is a code generator that allows you to play around
           value: false
         },
         /**
-         * Store children object via Polymer's getDistributedNodes
+         * Store the distributed swipeable content
          */
         _content: Object,
+        /**
+         * Store the offset width of the distributed swipeable content
+         * This way we try to minimise reflows (synchronous style/layout computation)
+         */
+        _width: Number
       },
 
       ready: function() {
@@ -277,12 +282,10 @@ At the end of the demo, there is a code generator that allows you to play around
       },
 
       attached: function() {
-        // on child element attached, inherit the height of the content.
+        // On child element attached, inherit the height of the content.
         var _content = Polymer.dom(this.$.content).getDistributedNodes()[0];
-        // this.async(function() {
-        //   this.style.height = _content.offsetHeight + 'px';
-        // }, 1);
-        // save effective children object.
+
+        // Save effective children object
         this.set('_content', _content);
       },
 
@@ -366,47 +369,55 @@ At the end of the demo, there is a code generator that allows you to play around
           return true;
         }
 
-        var towardsLeft = event.detail.dx < 0;
-        var towardsRight = event.detail.dx > 0;
+        var towardsLeft = event.detail.dx < 0; // True when pointer is moved to the left of its initial position
+        var towardsRight = event.detail.dx > 0; // True when pointer is moved to the right of its initial position
+
 
         if (this.swipeLeft) {
           var beforeRightEdge = this._curPos ? event.detail.dx < -this._curPos : true;
-          return towardsLeft || (towardsRight && this._atEdge && beforeRightEdge);
+          return towardsLeft && !this._atEdge || (towardsRight && this._atEdge && beforeRightEdge);
         }
 
         if (this.swipeRight) {
           var beforeLeftEdge = this._curPos ? event.detail.dx > -this._curPos : true;
-          return towardsRight || (towardsLeft && this._atEdge && beforeLeftEdge);
+          return towardsRight && !this._atEdge || (towardsLeft && this._atEdge && beforeLeftEdge);
         }
       },
 
       _tapHandler: function (event) {
-        // when disableSwipe is true, only click event can be triggered!
+        // When disableSwipe is true, only the click event can be triggered
         this.fire('tap-underlay', { nodeName: 'underlay', target: event });
         if (sharedPanel) {
-          // release the panel after use.
+          // Release the panel after use
           sharedPanel = null;
         }
       },
 
       _onTrack: function (event) {
         if (sharedPanel && this !== sharedPanel) {
-          // release the panel.
+          // Release the panel
           sharedPanel = null;
           return;
         }
 
-        if (this._swipeAllowed() && this._directionAllowed(event)) {
-          switch (event.detail.state) {
-            case 'start':
-              this._trackStart(event);
-              break;
-            case 'track':
-              this._trackX(event);
-              break;
-            case 'end':
-              this._trackEnd(event);
-              break;
+        if (this._swipeAllowed()) {
+          if (this._directionAllowed(event)) {
+            switch (event.detail.state) {
+              case 'start':
+                this._trackStart(event);
+                break;
+              case 'track':
+                this._trackX(event);
+                break;
+              case 'end':
+                this._trackEnd(event);
+                break;
+            }
+          } else if (this.noOppositeSwipe && this.swipeLeft !== this.swipeRight) {
+            var leftDrag = event.detail.ddx < 0 && this.swipeLeft;
+            var rightDrag = event.detail.ddx > 0 && this.swipeRight;
+
+            (leftDrag || rightDrag) && this._trackStart(event);
           }
         }
       },
@@ -415,7 +426,7 @@ At the end of the demo, there is a code generator that allows you to play around
         sharedPanel = this;
         this._dragging = true;
         if (this._dragging) {
-          this.width = this._content.offsetWidth;
+          this._width = this._content.offsetWidth;
           this._transition = false;
         }
       },
@@ -432,14 +443,14 @@ At the end of the demo, there is a code generator that allows you to play around
       },
 
       _trackEnd: function(event) {
-        // reserve for future use.
+        // Reserve for future use
       },
 
       _downHandler: function (event) {
         if (!this._dragging && !this.disableSwipe && !sharedPanel) {
-          // cancel selection
+          // Cancel selection
           event.preventDefault();
-          // grab this panel
+          // Grab this panel
           sharedPanel = this;
         }
       },
@@ -453,26 +464,26 @@ At the end of the demo, there is a code generator that allows you to play around
          */
         if (this._swipeAllowed() && this._atEdge && !this._validDelta) {
           this._moveDrawer(this._curPos);
-          // release the panel
+          // Release the panel
           sharedPanel = null;
           return;
         }
 
         /**
-         * tracking must be asserted.
+         * Tracking must be asserted
          */
         if (this._swipeAllowed() && this._tracking) {
           /**
-           *  to swipe to the leftmost edge:
-           *  - slide until [this.peekOffset] - [this.width].
+           * To swipe to the leftmost edge:
+           *  - slide until [this.peekOffset] - [this._width]
            *  - validDelta = true
            *  - AtEdge = false
            *  - store current position after swiping to leftmost edge, [curPos]
            *  - animate the dragging by [_moveDrawer(pixel_to_animate)]
            *
-           *  else vice versa for swiping to rightmsot edge and/ or either side.
+           * Else vice versa for swiping to rightmsot edge and/ or either side
            */
-          var slideTo = this.width - this.peekOffset,
+          var slideTo = this._width - this.peekOffset,
             offsetLR = this.swipeRight ? slideTo : -slideTo,
             deltaLR;
           if (!this.swipeLeft || this.swipeRight) {
@@ -489,7 +500,7 @@ At the end of the demo, there is a code generator that allows you to play around
           this._tracking = false;
           this._moveDrawer(deltaLR);
         }
-        // release the panel after use.
+        // Release the panel after use
         sharedPanel = null;
       },
 
@@ -500,7 +511,7 @@ At the end of the demo, there is a code generator that allows you to play around
       _transformForTranslateX: function(translateX) {
         if (translateX === null) {
           /**
-           * return 0 works smoother on mobile than returning '';
+           * Return 0 works smoother on mobile than returning '';
            */
           return 'translate3d(0, 0, 0)';
         }
@@ -509,19 +520,19 @@ At the end of the demo, there is a code generator that allows you to play around
 
       _moveDrawer: function(translateX) {
         var _content = this._content;
-        // if fade is set, transform with fading opacity.
+        // If fade is set, transform with fading opacity
         if (this.fade) {
           var _contentOffsetWidth = _content.offsetWidth;
           var _opacity = Math.max(0, (_contentOffsetWidth - Math.abs(translateX)) /
             _contentOffsetWidth);
-          // translateX is null which means that swipeable content is returning to its original
-          // position hence opacity is '' or 1;
+          // If translateX is null the swipeable content is returning to its original position
+          // Hence opacity is '' or 1
           _content.style.opacity = translateX === null ? '' : _opacity;
         }
-        // transform swipeable content.
+        // Transform swipeable content
         this.transform(this._transformForTranslateX(translateX), _content);
 
-        // apply class while transforming the drawer.
+        // Apply class while transforming the drawer
         this.toggleClass('transition', this._transition, _content);
         this.toggleClass('dragging', this._dragging, _content);
         this.toggleClass('swipe-left', this.swipeLeft, _content);
@@ -530,12 +541,11 @@ At the end of the demo, there is a code generator that allows you to play around
 
       // Reset the position of the swipeable content with the attribute `content` from the edge after being dragged.
       resetPosition: function() {
-        // this.transform(this._transformForTranslateX(null), this._content);
         this._moveDrawer(null);
-        // reset position of the swipeable content from the edge.
+        // Reset position of the swipeable content from the edge
         this.set('_atEdge', false);
         this.set('_curPos', 0);
-        // fire event when position is reset.
+        // Fire event when position is reset
         this.fire('position-reset');
       }
 
