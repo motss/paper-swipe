@@ -372,15 +372,14 @@ At the end of the demo, there is a code generator that allows you to play around
         var towardsLeft = event.detail.dx < 0; // True when pointer is moved to the left of its initial position
         var towardsRight = event.detail.dx > 0; // True when pointer is moved to the right of its initial position
 
-
         if (this.swipeLeft) {
-          var beforeRightEdge = this._curPos ? event.detail.dx < -this._curPos : true;
-          return towardsLeft && !this._atEdge || (towardsRight && this._atEdge && beforeRightEdge);
+          var beforeRightLimit = this._curPos || event.detail.dx < this.slideOffset;
+          return towardsLeft && !this._atEdge || (towardsRight /* && this._atEdge */ && beforeRightLimit);
         }
 
         if (this.swipeRight) {
-          var beforeLeftEdge = this._curPos ? event.detail.dx > -this._curPos : true;
-          return towardsRight && !this._atEdge || (towardsLeft && this._atEdge && beforeLeftEdge);
+          var beforeLeftLimit = this._curPos || event.detail.dx > -this.slideOffset;
+          return towardsRight && !this._atEdge || (towardsLeft /* && this._atEdge */ && beforeLeftLimit);
         }
       },
 
